@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Capture Popup</title>
+  <!-- Import Montserrat Font for a modern, bold look -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* CSS Variables for customization */
+    :root {
+      --accent-gradient: linear-gradient(45deg, #80e27e, #4caf50);
+      --overlay-color: rgba(0, 0, 0, 0.6);
+      --popup-bg: #fff;        /* White background */
+      --text-color: #000;      /* Black text */
+    }
+    
+    /* Basic Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #f2f2f2;
+      overflow-x: hidden;
+    }
+    
+    /* Popup Overlay */
+    #popupOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--overlay-color);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+    }
+    #popupOverlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    /* Popup Container – Spacious with White Background */
+    #popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 90%;
+      max-width: 700px;
+      padding: 60px 50px;
+      border-radius: 16px;
+      background: var(--popup-bg);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      z-index: 1000;
+      opacity: 0;
+      transform: translate(-50%, -40%) scale(0.8);
+      transition: transform 0.5s ease, opacity 0.5s ease;
+    }
+    #popup.active {
+      animation: popupIn 0.5s ease forwards;
+    }
+    @keyframes popupIn {
+      from { opacity: 0; transform: translate(-50%, -40%) scale(0.8); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+    
+    /* Close Button */
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 1.5rem;
+      color: #ccc;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+    .close-btn:hover { color: #999; }
+    
+    /* Popup Content */
+    .popup-content h2 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+      font-weight: 700;
+      text-align: center;
+      color: var(--text-color);
+    }
+    .note {
+      margin-bottom: 40px;
+      font-size: 1.1rem;
+      color: #555;
+      text-align: center;
+      line-height: 1.5;
+    }
+    
+    /* Form Styles */
+    #emailCaptureForm {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .input-wrapper {
+      position: relative;
+      width: 300px;
+      margin-bottom: 20px;
+      padding: 4px; /* Thicker border */
+      border-radius: 6px;
+      background: linear-gradient(45deg, #80e27e, #4caf50, #80e27e, #4caf50);
+      background-size: 400%;
+      animation: animatedGradient 4s ease infinite, pulseGlow 2s ease-in-out infinite;
+    }
+    .input-wrapper input {
+      width: 100%;
+      padding: 14px;
+      font-size: 1.1rem;
+      border: none;
+      outline: none;
+      border-radius: 4px;
+      background: #fff;
+    }
+    @keyframes animatedGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 10px 0 rgba(72,187,120,0.6); }
+      50% { box-shadow: 0 0 20px 5px rgba(72,187,120,0.9); }
+    }
+    
+    /* CTA Button */
+    #ctaButton {
+      width: 300px;
+      padding: 14px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background: var(--accent-gradient);
+      color: #000;
+      font-weight: 600;
+      transition: background 0.3s ease;
+      text-align: center;
+    }
+    #ctaButton:hover {
+      background: linear-gradient(45deg, #4caf50, #80e27e);
+    }
+    
+    /* Advanced Money Explosion & Shockwave */
+    #moneyExplosion {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2000;
+    }
+    .money {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      font-size: 2.5rem;
+      animation: explodeAdvanced 1.5s ease-out forwards;
+      text-shadow: 0 0 8px rgba(255,215,0,0.8);
+    }
+    @keyframes explodeAdvanced {
+      from {
+        transform: translate(0,0) rotate(0deg) scale(1);
+        opacity: 1;
+      }
+      to {
+        transform: translate(var(--tx), var(--ty)) rotate(var(--rotate)) scale(var(--scale));
+        opacity: 0;
+      }
+    }
+    
+    /* Thank You Message Container */
+    #thankYouMessage {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-color);
+      text-align: center;
+      opacity: 0;
+      z-index: 2100;
+    }
+    .fadeIn {
+      animation: fadeIn 1s ease forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    /* Staged message parts */
+    #thankYouText {
+      display: block;
+    }
+    #moreMessage {
+      display: block;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards;
+      animation-delay: 1s;
+    }
+    
+    /* Animated glowing gradient and pop animation for "CHA-CHING" */
+    .cha-chings {
+      display: inline-block;
+      font-size: 6rem; /* Much larger text */
+      background: linear-gradient(45deg, #80e27e, #4caf50, #80e27e, #4caf50);
+      background-size: 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 15px rgba(72, 187, 120, 1);
+      animation: animatedGradient 4s ease infinite, popAnimation 1s ease forwards;
+    }
+    @keyframes popAnimation {
+      0% {
+        transform: scale(0.1) rotate(-15deg);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.5) rotate(10deg);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1) rotate(0deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Overlay -->
+  <div id="popupOverlay"></div>
+  
+  <!-- Popup Container -->
+  <div id="popup">
+    <span class="close-btn">&times;</span>
+    <div class="popup-content">
+      <h2>Enter your info below and we'll send you a short video on how this works:</h2>
+      <p class="note">
+        <strong>***If You’re NOT a Shopify Ecommerce Brand Doing at Least $20k+ per month… This video is not for you***</strong>
+      </p>
+      <form id="emailCaptureForm">
+        <div class="input-wrapper">
+          <input 
+            type="email" 
+            name="email" 
+            id="emailInput" 
+            placeholder="Enter your email address"
+            required
+          />
+        </div>
+        <button type="submit" id="ctaButton">
+          Get The FREE Training &raquo;
+        </button>
+      </form>
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const popupOverlay = document.getElementById("popupOverlay");
+      const popup = document.getElementById("popup");
+      const closeBtn = document.querySelector(".close-btn");
+      const emailCaptureForm = document.getElementById("emailCaptureForm");
+      
+      console.log("DOM fully loaded and parsed.");
+  
+      // Function to open the popup
+      function openPopup() {
+        popupOverlay.classList.add("active");
+        popup.classList.add("active");
+        console.log("Popup opened.");
+      }
+  
+      // Function to close the popup
+      function closePopup() {
+        popupOverlay.classList.remove("active");
+        popup.classList.remove("active");
+        console.log("Popup closed.");
+      }
+  
+      // Advanced money explosion animation function
+      function showMoneyExplosion() {
+        console.log("Money explosion started.");
+        const explosionContainer = document.createElement("div");
+        explosionContainer.id = "moneyExplosion";
+        document.body.appendChild(explosionContainer);
+  
+        const numMoney = 50;
+        for (let i = 0; i < numMoney; i++) {
+          const moneySpan = document.createElement("span");
+          moneySpan.className = "money";
+          moneySpan.textContent = "💵";
+          // Random translation: x and y between -500px and 500px
+          const tx = (Math.random() * 1000 - 500) + "px";
+          const ty = (Math.random() * 1000 - 500) + "px";
+          // Random rotation between -720deg and 720deg
+          const rotate = (Math.random() * 1440 - 720) + "deg";
+          // Random scale between 0.5 and 1.5
+          const scale = (Math.random() + 0.5).toFixed(2);
+          // Random delay between 0 and 0.3 seconds
+          const delay = Math.random() * 0.3 + "s";
+          moneySpan.style.setProperty("--tx", tx);
+          moneySpan.style.setProperty("--ty", ty);
+          moneySpan.style.setProperty("--rotate", rotate);
+          moneySpan.style.setProperty("--scale", scale);
+          moneySpan.style.animationDelay = delay;
+          explosionContainer.appendChild(moneySpan);
+        }
+  
+        setTimeout(() => {
+          if (explosionContainer && explosionContainer.parentNode) {
+            explosionContainer.parentNode.removeChild(explosionContainer);
+            console.log("Money explosion ended.");
+          }
+          showThankYouMessage();
+        }, 1500);
+      }
+  
+      // Function to show thank you message with staged fadeIn
+      function showThankYouMessage() {
+        const msgDiv = document.createElement("div");
+        msgDiv.id = "thankYouMessage";
+        // New message: First line "CHA-CHING" with crazy animation, then next line the thank-you text.
+        msgDiv.innerHTML = "<span id='thankYouText'><span class='cha-chings'>CHA-CHING</span></span><br><span id='moreMessage'>Thanks for signing up. More sales are on the way.</span>";
+        document.body.appendChild(msgDiv);
+        // Force reflow then add the fadeIn class to trigger CSS animation
+        void msgDiv.offsetWidth;
+        msgDiv.classList.add("fadeIn");
+        console.log("Thank you message displayed.");
+      }
+  
+      setTimeout(openPopup, 100);
+  
+      // Ensure that clicks inside the popup don’t close it
+      popup.addEventListener("click", function(e) {
+        e.stopPropagation();
+      });
+      
+      // Close the popup when clicking the overlay or the close button
+      popupOverlay.addEventListener("click", closePopup);
+      closeBtn.addEventListener("click", closePopup);
+  
+      // Handle form submission
+      emailCaptureForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+        const emailValue = document.getElementById("emailInput").value;
+        console.log("Submitted email:", emailValue);
+        // (Integration with your email platform or backend can be added here)
+  
+        closePopup();
+        showMoneyExplosion();
+      });
+    });
+  </script>
+</body>
+</html>
