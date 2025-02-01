@@ -29,7 +29,7 @@
       position: relative;
     }
     
-    /* Dark overlay for video effect (if needed later) */
+    /* Dark overlay for video effect */
     #darkOverlay {
       position: fixed;
       top: 0;
@@ -123,7 +123,7 @@
       position: relative;
       width: 300px;
       margin-bottom: 20px;
-      padding: 4px; /* Thicker border */
+      padding: 4px;
       border-radius: 6px;
       background: linear-gradient(45deg, #80e27e, #4caf50, #80e27e, #4caf50);
       background-size: 400%;
@@ -229,7 +229,7 @@
     /* Animated glowing gradient and pop animation for "CHA-CHING" */
     .cha-chings {
       display: inline-block;
-      font-size: 6rem; /* Much larger text */
+      font-size: 6rem;
       background: linear-gradient(45deg, #80e27e, #4caf50, #80e27e, #4caf50);
       background-size: 400%;
       -webkit-background-clip: text;
@@ -272,15 +272,27 @@
       to { opacity: 1; }
     }
     
-    /* Neon Red Heading Above Video */
+    /* Neon Red Heading Above the Video with Typing Effect */
     #videoHeading {
       font-size: 1.8rem;
-      color: #ff0000;
+      color: red;
       text-align: center;
       margin-bottom: 20px;
-      animation: fadeIn 1s ease forwards;
-      text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 0.15em solid red;
+      width: 0;
+      animation: typing 3s steps(40, end) forwards, blink-caret 0.75s step-end infinite;
     }
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    @keyframes blink-caret {
+      from, to { border-color: transparent; }
+      50% { border-color: red; }
+    }
+    
   </style>
 </head>
 <body>
@@ -302,7 +314,7 @@
             name="email" 
             id="emailInput" 
             placeholder="Enter your email address"
-            required
+            required 
           />
         </div>
         <button type="submit" id="ctaButton">
@@ -321,14 +333,12 @@
       
       console.log("DOM fully loaded and parsed.");
   
-      // Function to open the popup
       function openPopup() {
         popupOverlay.classList.add("active");
         popup.classList.add("active");
         console.log("Popup opened.");
       }
   
-      // Function to close the popup
       function closePopup() {
         popupOverlay.classList.remove("active");
         popup.classList.remove("active");
@@ -347,14 +357,10 @@
           const moneySpan = document.createElement("span");
           moneySpan.className = "money";
           moneySpan.textContent = "💵";
-          // Random translation: x and y between -500px and 500px
           const tx = (Math.random() * 1000 - 500) + "px";
           const ty = (Math.random() * 1000 - 500) + "px";
-          // Random rotation between -720deg and 720deg
           const rotate = (Math.random() * 1440 - 720) + "deg";
-          // Random scale between 0.5 and 1.5
           const scale = (Math.random() + 0.5).toFixed(2);
-          // Random delay between 0 and 0.3 seconds
           const delay = Math.random() * 0.3 + "s";
           moneySpan.style.setProperty("--tx", tx);
           moneySpan.style.setProperty("--ty", ty);
@@ -373,23 +379,24 @@
         }, 1500);
       }
   
-      // Function to show thank you message, then embed the video with neon border and heading
+      // Function to show thank you message and then embed the video with neon effects and typing header
       function showThankYouMessage() {
         const msgDiv = document.createElement("div");
         msgDiv.id = "thankYouMessage";
-        // Final message: "CHA-CHING" with pop animation, then "More sales are on the way."
+        // Final message: "CHA-CHING" with pop animation, then only "More sales are on the way."
         msgDiv.innerHTML = "<span id='thankYouText'><span class='cha-chings'>CHA-CHING</span></span><br><span id='moreMessage'>More sales are on the way.</span>";
         document.body.appendChild(msgDiv);
         void msgDiv.offsetWidth;
         msgDiv.classList.add("fadeIn");
         console.log("Thank you message displayed.");
   
-        // After 5 seconds, replace the thank you message with the video embed and neon heading.
+        // After 5 seconds, replace the thank you message with the video embed and neon header.
         setTimeout(() => {
-          msgDiv.innerHTML = '<div id="videoHeading">STEP 1: Watch The Video Below For How The 1-oN-1 Ads Mastery Mentorship Works</div><div id="videoContainer"><iframe width="560" height="315" src="https://www.youtube.com/embed/qsjOaYkoqDs?autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="display:block; margin:0 auto;"></iframe></div>';
+          msgDiv.innerHTML = '<div id="videoHeading">STEP 1: Watch The Video Below For How The 1-ON-1 Ads Mastery Mentorship Works</div><div id="videoContainer"><iframe width="560" height="315" src="https://www.youtube.com/embed/qsjOaYkoqDs?autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="display:block; margin:0 auto;"></iframe></div>';
           msgDiv.style.width = "560px";
           msgDiv.style.height = "auto";
-          // Add dark overlay fade-in if needed
+  
+          // Fade in the dark overlay (if desired; remove if not needed)
           const darkOverlay = document.createElement("div");
           darkOverlay.id = "darkOverlay";
           darkOverlay.style.position = "fixed";
@@ -411,7 +418,7 @@
   
       setTimeout(openPopup, 100);
   
-      // Ensure that clicks inside the popup don’t close it
+      // Prevent clicks inside the popup from closing it
       popup.addEventListener("click", function(e) {
         e.stopPropagation();
       });
@@ -420,7 +427,6 @@
       popupOverlay.addEventListener("click", closePopup);
       closeBtn.addEventListener("click", closePopup);
   
-      // Handle form submission
       emailCaptureForm.addEventListener("submit", function(e) {
         e.preventDefault();
         const emailValue = document.getElementById("emailInput").value;
