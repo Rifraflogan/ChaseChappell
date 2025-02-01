@@ -29,7 +29,7 @@
       position: relative;
     }
     
-    /* Dark Overlay for video (initially hidden) */
+    /* Dark overlay for video effect (initially hidden) */
     #darkOverlay {
       position: fixed;
       top: 0;
@@ -71,7 +71,7 @@
       padding: 60px 50px;
       border-radius: 16px;
       background: var(--popup-bg);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
       z-index: 1000;
       opacity: 0;
       transform: translate(-50%, -40%) scale(0.8);
@@ -225,6 +225,7 @@
       animation: fadeIn 1s ease forwards;
       animation-delay: 1s;
     }
+    
     /* Animated glowing gradient and pop animation for "CHA-CHING" */
     .cha-chings {
       display: inline-block;
@@ -249,6 +250,22 @@
         transform: scale(1) rotate(0deg);
       }
     }
+  
+    /* Video Container Styles */
+    #videoContainer {
+      width: 560px;
+      height: 315px;
+      margin: 0 auto;
+      border: 10px solid;
+      border-image: linear-gradient(45deg, red, darkred, red) 1;
+      animation: borderAnimation 4s linear infinite;
+      display: block;
+    }
+    @keyframes borderAnimation {
+      0% { border-image-source: linear-gradient(45deg, red, darkred, red); }
+      50% { border-image-source: linear-gradient(45deg, darkred, red, darkred); }
+      100% { border-image-source: linear-gradient(45deg, red, darkred, red); }
+    }
   </style>
 </head>
 <body>
@@ -265,17 +282,9 @@
       </p>
       <form id="emailCaptureForm">
         <div class="input-wrapper">
-          <input 
-            type="email" 
-            name="email" 
-            id="emailInput" 
-            placeholder="Enter your email address"
-            required
-          />
+          <input type="email" name="email" id="emailInput" placeholder="Enter your email address" required />
         </div>
-        <button type="submit" id="ctaButton">
-          Get The FREE Training &raquo;
-        </button>
+        <button type="submit" id="ctaButton">Get The FREE Training &raquo;</button>
       </form>
     </div>
   </div>
@@ -345,32 +354,31 @@
       function showThankYouMessage() {
         const msgDiv = document.createElement("div");
         msgDiv.id = "thankYouMessage";
-        // Final message: "CHA-CHING" with the original pop animation, then only "More sales are on the way."
+        // New message: "CHA-CHING" with original pop animation, then only "More sales are on the way."
         msgDiv.innerHTML = "<span id='thankYouText'><span class='cha-chings'>CHA-CHING</span></span><br><span id='moreMessage'>More sales are on the way.</span>";
         document.body.appendChild(msgDiv);
         void msgDiv.offsetWidth;
         msgDiv.classList.add("fadeIn");
         console.log("Thank you message displayed.");
   
-        // After a delay, replace the thank you message with the video embed wrapped in a container with a red animated gradient border,
-        // and fade the background to darkness.
+        // After 5 seconds, replace the thank you message with the video embed.
         setTimeout(() => {
           // Create a container for the video with an animated red gradient border.
           const videoContainer = document.createElement("div");
           videoContainer.id = "videoContainer";
-          videoContainer.innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/qsjOaYkoqDs?autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
-          // Style the video container (centered, with animated red border)
+          videoContainer.innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/qsjOaYkoqDs?autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="display:block; margin:0 auto;"></iframe>';
           videoContainer.style.width = "560px";
           videoContainer.style.height = "315px";
           videoContainer.style.margin = "0 auto";
           videoContainer.style.border = "10px solid";
           videoContainer.style.borderImage = "linear-gradient(45deg, red, darkred, red) 1";
           videoContainer.style.animation = "borderAnimation 4s linear infinite";
-          // Replace the thank you message with the video container
+  
+          // Replace the thank you message with the video container.
           msgDiv.innerHTML = "";
           msgDiv.appendChild(videoContainer);
   
-          // Fade the background to darkness by adding a dark overlay
+          // Fade the background to darkness by adding a dark overlay.
           const darkOverlay = document.createElement("div");
           darkOverlay.id = "darkOverlay";
           darkOverlay.style.position = "fixed";
@@ -384,32 +392,18 @@
           darkOverlay.style.pointerEvents = "none";
           darkOverlay.style.transition = "opacity 1s ease";
           document.body.appendChild(darkOverlay);
-          // Animate the overlay to fade in
           setTimeout(() => {
             darkOverlay.style.opacity = "0.8";
           }, 100);
-        }, 5000); // 5 seconds delay before replacing message with video
-      }
-      
-      /* Animated red gradient border animation for video container */
-      @keyframes borderAnimation {
-        0% { border-image-source: linear-gradient(45deg, red, darkred, red); }
-        50% { border-image-source: linear-gradient(45deg, darkred, red, darkred); }
-        100% { border-image-source: linear-gradient(45deg, red, darkred, red); }
+        }, 5000);
       }
   
       setTimeout(openPopup, 100);
   
-      // Ensure that clicks inside the popup don’t close it
-      popup.addEventListener("click", function(e) {
-        e.stopPropagation();
-      });
-      
-      // Close the popup when clicking the overlay or the close button
+      popup.addEventListener("click", function(e) { e.stopPropagation(); });
       popupOverlay.addEventListener("click", closePopup);
       closeBtn.addEventListener("click", closePopup);
   
-      // Handle form submission
       emailCaptureForm.addEventListener("submit", function(e) {
         e.preventDefault();
         const emailValue = document.getElementById("emailInput").value;
