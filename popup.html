@@ -273,10 +273,9 @@
     }
     
     /* Neon Red Header Above the Video */
-    #videoHeader {
+    #videoHeading {
       text-align: center;
       margin-bottom: 20px;
-      /* Remove typewriter settings to avoid cutting off; let the text wrap if needed */
     }
     #stepOne {
       font-size: 2.5rem;
@@ -291,6 +290,30 @@
       animation-delay: 0.5s;
     }
     
+    /* Responsive Adjustments */
+    @media (max-width:480px) {
+      #popup {
+        padding: 30px 20px;
+      }
+      .popup-content h2 {
+        font-size: 1.8rem;
+      }
+      /* Adjust video header for mobile */
+      #videoHeading {
+        padding: 0 10px;
+      }
+      #stepOne {
+        font-size: 1.8rem;
+      }
+      #videoDescription {
+        font-size: 1.2rem;
+      }
+      /* Also adjust video container width */
+      #videoContainer {
+        width: 90%;
+        height: auto;
+      }
+    }
   </style>
 </head>
 <body>
@@ -312,7 +335,7 @@
             name="email" 
             id="emailInput" 
             placeholder="Enter your email address"
-            required
+            required 
           />
         </div>
         <button type="submit" id="ctaButton">
@@ -388,10 +411,10 @@
         msgDiv.classList.add("fadeIn");
         console.log("Thank you message displayed.");
   
-        // After 5 seconds, replace the thank you message with the video embed and header.
+        // After 5 seconds, replace the thank you message with the video embed and neon header.
         setTimeout(() => {
           msgDiv.innerHTML = `
-            <div id="videoHeader">
+            <div id="videoHeading">
               <div id="stepOne">STEP 1:</div>
               <div id="videoDescription">Watch The Video Below For How The 1-ON-1 Ads Mastery Mentorship Works</div>
             </div>
@@ -402,7 +425,7 @@
           msgDiv.style.width = "560px";
           msgDiv.style.height = "auto";
   
-          // Fade in the dark overlay (if desired)
+          // Fade in the dark overlay to simulate a movie theater effect
           const darkOverlay = document.createElement("div");
           darkOverlay.id = "darkOverlay";
           darkOverlay.style.position = "fixed";
