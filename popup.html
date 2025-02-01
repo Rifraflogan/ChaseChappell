@@ -123,7 +123,7 @@
       position: relative;
       width: 300px;
       margin-bottom: 20px;
-      padding: 4px;
+      padding: 4px; /* Thicker border */
       border-radius: 6px;
       background: linear-gradient(45deg, #80e27e, #4caf50, #80e27e, #4caf50);
       background-size: 400%;
@@ -229,7 +229,7 @@
     /* Animated glowing gradient and pop animation for "CHA-CHING" */
     .cha-chings {
       display: inline-block;
-      font-size: 6rem;
+      font-size: 6rem; /* Much larger text */
       background: linear-gradient(45deg, #80e27e, #4caf50, #80e27e, #4caf50);
       background-size: 400%;
       -webkit-background-clip: text;
@@ -272,25 +272,23 @@
       to { opacity: 1; }
     }
     
-    /* Neon Red Heading Above the Video with Typing Effect */
-    #videoHeading {
-      font-size: 1.8rem;
-      color: red;
+    /* Neon Red Header Above the Video */
+    #videoHeader {
       text-align: center;
       margin-bottom: 20px;
-      overflow: hidden;
-      white-space: nowrap;
-      border-right: 0.15em solid red;
-      width: 0;
-      animation: typing 3s steps(40, end) forwards, blink-caret 0.75s step-end infinite;
+      /* Remove typewriter settings to avoid cutting off; let the text wrap if needed */
     }
-    @keyframes typing {
-      from { width: 0; }
-      to { width: 100%; }
+    #stepOne {
+      font-size: 2.5rem;
+      color: red;
+      text-shadow: 0 0 20px red, 0 0 30px red;
+      animation: fadeIn 1s ease forwards;
     }
-    @keyframes blink-caret {
-      from, to { border-color: transparent; }
-      50% { border-color: red; }
+    #videoDescription {
+      font-size: 1.5rem;
+      color: red;
+      animation: fadeIn 1s ease forwards;
+      animation-delay: 0.5s;
     }
     
   </style>
@@ -314,7 +312,7 @@
             name="email" 
             id="emailInput" 
             placeholder="Enter your email address"
-            required 
+            required
           />
         </div>
         <button type="submit" id="ctaButton">
@@ -379,7 +377,7 @@
         }, 1500);
       }
   
-      // Function to show thank you message and then embed the video with neon effects and typing header
+      // Function to show thank you message and then embed the video with neon header
       function showThankYouMessage() {
         const msgDiv = document.createElement("div");
         msgDiv.id = "thankYouMessage";
@@ -390,13 +388,21 @@
         msgDiv.classList.add("fadeIn");
         console.log("Thank you message displayed.");
   
-        // After 5 seconds, replace the thank you message with the video embed and neon header.
+        // After 5 seconds, replace the thank you message with the video embed and header.
         setTimeout(() => {
-          msgDiv.innerHTML = '<div id="videoHeading">STEP 1: Watch The Video Below For How The 1-ON-1 Ads Mastery Mentorship Works</div><div id="videoContainer"><iframe width="560" height="315" src="https://www.youtube.com/embed/qsjOaYkoqDs?autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="display:block; margin:0 auto;"></iframe></div>';
+          msgDiv.innerHTML = `
+            <div id="videoHeader">
+              <div id="stepOne">STEP 1:</div>
+              <div id="videoDescription">Watch The Video Below For How The 1-ON-1 Ads Mastery Mentorship Works</div>
+            </div>
+            <div id="videoContainer">
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/qsjOaYkoqDs?autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="display:block; margin:0 auto;"></iframe>
+            </div>
+          `;
           msgDiv.style.width = "560px";
           msgDiv.style.height = "auto";
   
-          // Fade in the dark overlay (if desired; remove if not needed)
+          // Fade in the dark overlay (if desired)
           const darkOverlay = document.createElement("div");
           darkOverlay.id = "darkOverlay";
           darkOverlay.style.position = "fixed";
@@ -419,9 +425,7 @@
       setTimeout(openPopup, 100);
   
       // Prevent clicks inside the popup from closing it
-      popup.addEventListener("click", function(e) {
-        e.stopPropagation();
-      });
+      popup.addEventListener("click", function(e) { e.stopPropagation(); });
       
       // Close the popup when clicking the overlay or the close button
       popupOverlay.addEventListener("click", closePopup);
