@@ -26,6 +26,21 @@
       font-family: 'Montserrat', sans-serif;
       background: #f2f2f2;
       overflow-x: hidden;
+      position: relative;
+    }
+    
+    /* Dark Overlay for video (initially hidden) */
+    #darkOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      opacity: 0;
+      z-index: 2050;
+      pointer-events: none;
+      transition: opacity 1s ease;
     }
     
     /* Popup Overlay */
@@ -56,7 +71,7 @@
       padding: 60px 50px;
       border-radius: 16px;
       background: var(--popup-bg);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
       z-index: 1000;
       opacity: 0;
       transform: translate(-50%, -40%) scale(0.8);
@@ -193,7 +208,6 @@
       opacity: 0;
       z-index: 2100;
     }
-    /* Fade in animation class */
     .fadeIn {
       animation: fadeIn 1s ease forwards;
     }
@@ -327,24 +341,61 @@
         }, 1500);
       }
   
-      // Function to show thank you message with staged fadeIn
+      // Function to show thank you message with staged fadeIn and then embed the video
       function showThankYouMessage() {
         const msgDiv = document.createElement("div");
         msgDiv.id = "thankYouMessage";
-        // New message: First line "CHA-CHING" with crazy animation, then next line the final message.
+        // Final message: "CHA-CHING" with the original pop animation, then only "More sales are on the way."
         msgDiv.innerHTML = "<span id='thankYouText'><span class='cha-chings'>CHA-CHING</span></span><br><span id='moreMessage'>More sales are on the way.</span>";
         document.body.appendChild(msgDiv);
-        // Force reflow then add the fadeIn class to trigger CSS animation
         void msgDiv.offsetWidth;
         msgDiv.classList.add("fadeIn");
         console.log("Thank you message displayed.");
   
-        // After a delay, replace the thank you message with an embedded YouTube video
+        // After a delay, replace the thank you message with the video embed wrapped in a container with a red animated gradient border,
+        // and fade the background to darkness.
         setTimeout(() => {
-          msgDiv.innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/qsjOaYkoqDs?autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="display:block; margin:0 auto;"></iframe>';
-          msgDiv.style.width = "560px";
-          msgDiv.style.height = "315px";
-        }, 5000); // 5 seconds delay before showing the video
+          // Create a container for the video with an animated red gradient border.
+          const videoContainer = document.createElement("div");
+          videoContainer.id = "videoContainer";
+          videoContainer.innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/qsjOaYkoqDs?autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+          // Style the video container (centered, with animated red border)
+          videoContainer.style.width = "560px";
+          videoContainer.style.height = "315px";
+          videoContainer.style.margin = "0 auto";
+          videoContainer.style.border = "10px solid";
+          videoContainer.style.borderImage = "linear-gradient(45deg, red, darkred, red) 1";
+          videoContainer.style.animation = "borderAnimation 4s linear infinite";
+          // Replace the thank you message with the video container
+          msgDiv.innerHTML = "";
+          msgDiv.appendChild(videoContainer);
+  
+          // Fade the background to darkness by adding a dark overlay
+          const darkOverlay = document.createElement("div");
+          darkOverlay.id = "darkOverlay";
+          darkOverlay.style.position = "fixed";
+          darkOverlay.style.top = "0";
+          darkOverlay.style.left = "0";
+          darkOverlay.style.width = "100%";
+          darkOverlay.style.height = "100%";
+          darkOverlay.style.background = "black";
+          darkOverlay.style.opacity = "0";
+          darkOverlay.style.zIndex = "2050";
+          darkOverlay.style.pointerEvents = "none";
+          darkOverlay.style.transition = "opacity 1s ease";
+          document.body.appendChild(darkOverlay);
+          // Animate the overlay to fade in
+          setTimeout(() => {
+            darkOverlay.style.opacity = "0.8";
+          }, 100);
+        }, 5000); // 5 seconds delay before replacing message with video
+      }
+      
+      /* Animated red gradient border animation for video container */
+      @keyframes borderAnimation {
+        0% { border-image-source: linear-gradient(45deg, red, darkred, red); }
+        50% { border-image-source: linear-gradient(45deg, darkred, red, darkred); }
+        100% { border-image-source: linear-gradient(45deg, red, darkred, red); }
       }
   
       setTimeout(openPopup, 100);
