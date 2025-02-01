@@ -29,7 +29,7 @@
       position: relative;
     }
     
-    /* Dark overlay for video effect (initially hidden) */
+    /* Dark overlay for video effect (if needed later) */
     #darkOverlay {
       position: fixed;
       top: 0;
@@ -258,19 +258,28 @@
       margin: 0 auto;
       border: 5px solid red;
       box-shadow: 0 0 20px red;
-      animation: neonFlicker 2s infinite alternate;
+      animation: neonFlicker 2s infinite alternate, fadeInNeon 2s ease forwards;
+      opacity: 0;
       display: block;
     }
     @keyframes neonFlicker {
-      0% {
-        box-shadow: 0 0 10px red, 0 0 20px red, 0 0 30px red;
-      }
-      50% {
-        box-shadow: 0 0 20px red, 0 0 30px red, 0 0 40px red;
-      }
-      100% {
-        box-shadow: 0 0 10px red, 0 0 20px red, 0 0 30px red;
-      }
+      0% { box-shadow: 0 0 10px red, 0 0 20px red, 0 0 30px red; }
+      50% { box-shadow: 0 0 20px red, 0 0 30px red, 0 0 40px red; }
+      100% { box-shadow: 0 0 10px red, 0 0 20px red, 0 0 30px red; }
+    }
+    @keyframes fadeInNeon {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    /* Neon Red Heading Above Video */
+    #videoHeading {
+      font-size: 1.8rem;
+      color: #ff0000;
+      text-align: center;
+      margin-bottom: 20px;
+      animation: fadeIn 1s ease forwards;
+      text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000;
     }
   </style>
 </head>
@@ -288,7 +297,13 @@
       </p>
       <form id="emailCaptureForm">
         <div class="input-wrapper">
-          <input type="email" name="email" id="emailInput" placeholder="Enter your email address" required />
+          <input 
+            type="email" 
+            name="email" 
+            id="emailInput" 
+            placeholder="Enter your email address"
+            required
+          />
         </div>
         <button type="submit" id="ctaButton">
           Get The FREE Training &raquo;
@@ -358,7 +373,7 @@
         }, 1500);
       }
   
-      // Function to show thank you message and then embed the video
+      // Function to show thank you message, then embed the video with neon border and heading
       function showThankYouMessage() {
         const msgDiv = document.createElement("div");
         msgDiv.id = "thankYouMessage";
@@ -369,24 +384,12 @@
         msgDiv.classList.add("fadeIn");
         console.log("Thank you message displayed.");
   
-        // After 5 seconds, replace the thank you message with the video embed.
+        // After 5 seconds, replace the thank you message with the video embed and neon heading.
         setTimeout(() => {
-          // Create a container for the video with a glowing red neon border.
-          const videoContainer = document.createElement("div");
-          videoContainer.id = "videoContainer";
-          videoContainer.innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/qsjOaYkoqDs?autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="display:block; margin:0 auto;"></iframe>';
-          videoContainer.style.width = "560px";
-          videoContainer.style.height = "315px";
-          videoContainer.style.margin = "0 auto";
-          videoContainer.style.border = "5px solid red";
-          videoContainer.style.boxShadow = "0 0 20px red";
-          videoContainer.style.animation = "neonFlicker 2s infinite alternate";
-  
-          // Replace the thank you message with the video container.
-          msgDiv.innerHTML = "";
-          msgDiv.appendChild(videoContainer);
-  
-          // Fade the background to darkness by adding a dark overlay.
+          msgDiv.innerHTML = '<div id="videoHeading">STEP 1: Watch The Video Below For How The 1-oN-1 Ads Mastery Mentorship Works</div><div id="videoContainer"><iframe width="560" height="315" src="https://www.youtube.com/embed/qsjOaYkoqDs?autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="display:block; margin:0 auto;"></iframe></div>';
+          msgDiv.style.width = "560px";
+          msgDiv.style.height = "auto";
+          // Add dark overlay fade-in if needed
           const darkOverlay = document.createElement("div");
           darkOverlay.id = "darkOverlay";
           darkOverlay.style.position = "fixed";
