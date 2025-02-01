@@ -193,6 +193,7 @@
       opacity: 0;
       z-index: 2100;
     }
+    /* Fade in animation class */
     .fadeIn {
       animation: fadeIn 1s ease forwards;
     }
@@ -210,7 +211,6 @@
       animation: fadeIn 1s ease forwards;
       animation-delay: 1s;
     }
-    
     /* Animated glowing gradient and pop animation for "CHA-CHING" */
     .cha-chings {
       display: inline-block;
@@ -338,6 +338,14 @@
         void msgDiv.offsetWidth;
         msgDiv.classList.add("fadeIn");
         console.log("Thank you message displayed.");
+  
+        // After a delay, replace the thank you message with an embedded YouTube video
+        setTimeout(() => {
+          msgDiv.innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/qsjOaYkoqDs?autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="display:block; margin:0 auto;"></iframe>';
+          // Optionally, adjust msgDiv styling to center the video if needed
+          msgDiv.style.width = "560px";
+          msgDiv.style.height = "315px";
+        }, 5000); // 5 seconds delay before showing the video
       }
   
       setTimeout(openPopup, 100);
