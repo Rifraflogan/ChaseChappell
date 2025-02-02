@@ -125,7 +125,7 @@
         opacity: 0;
       }
     }
-    /* Overlay Text – fades in after the shockwave */
+    /* Overlay Text: common styling */
     .overlay-text {
       position: absolute;
       top: 50%;
@@ -134,15 +134,29 @@
       color: #fff;
       font-size: 2.5em;
       text-align: center;
-      opacity: 0;
-      animation: textFadeIn 1s forwards 1.6s;
-      padding: 0 20px;
       width: 100%;
       text-transform: uppercase;
       letter-spacing: 1px;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+      opacity: 0;
     }
-    @keyframes textFadeIn {
+    /* First message: "Congratulations" fades in then out */
+    .overlay-text-first {
+      animation: fadeInOut 2s forwards;
+      animation-delay: 1.6s;
+    }
+    /* Second message: "Your spot is reserved" fades in */
+    .overlay-text-second {
+      animation: fadeIn 1s forwards;
+      animation-delay: 3.6s;
+    }
+    @keyframes fadeInOut {
+      0% { opacity: 0; }
+      20% { opacity: 1; }
+      60% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
@@ -158,9 +172,11 @@
       <input type="submit" value="Submit🔥">
     </form>
   </div>
-  <!-- Shockwave Overlay Container (Emojis will be injected via JavaScript) -->
+  <!-- Shockwave Overlay Container (Emojis and overlay texts will be injected) -->
   <div id="shockwave-overlay">
-    <div class="overlay-text">Congratulations. Your spot is confirmed.</div>
+    <!-- The fire emojis will be injected by JavaScript -->
+    <div class="overlay-text overlay-text-first">Congratulations</div>
+    <div class="overlay-text overlay-text-second">Your spot is reserved</div>
   </div>
   <script>
     // Efficiently generate fire emoji elements for the shockwave animation.
@@ -182,15 +198,15 @@
       }
     })();
     
-    // When the form is submitted, trigger the shockwave animation.
+    // When the form is submitted, trigger the shockwave overlay.
     document.getElementById('phone-form').addEventListener('submit', function(e) {
-      e.preventDefault(); // Prevent the default form submission.
+      e.preventDefault(); // Prevent default form submission.
       const overlay = document.getElementById('shockwave-overlay');
       overlay.classList.add('active');
-      // Optionally hide the form container after the animation completes.
+      // Hide the form container after the complete overlay sequence (4s).
       setTimeout(() => {
         document.querySelector('.form-container').style.display = 'none';
-      }, 1500);
+      }, 4000);
     });
   </script>
 </body>
