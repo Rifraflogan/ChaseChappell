@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Phone Number Capture</title>
   <style>
-    /* Reset and base styles */
+    /* Reset styles */
     * {
       margin: 0;
       padding: 0;
@@ -20,7 +20,7 @@
       justify-content: center;
       align-items: center;
     }
-    /* White container */
+    /* Static white container */
     .form-container {
       background: #fff;
       border-radius: 15px;
@@ -29,27 +29,38 @@
       max-width: 400px;
       text-align: center;
       position: relative;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
-    /* Header style */
     .form-container h2 {
       margin-bottom: 20px;
       font-size: 1.5em;
       color: #333;
     }
-    /* Input styles */
+    /* Phone number input with animated neon border effect */
     input[type="tel"] {
       width: 100%;
       padding: 12px;
-      border: 1px solid #ccc;
+      border: 2px solid #fff;
       border-radius: 5px;
       font-size: 1em;
       margin-bottom: 15px;
+      outline: none;
+      animation: neonInput 2s infinite;
     }
     input[type="tel"]::placeholder {
       color: #aaa;
     }
-    /* Submit button with pulsating gradient glow */
+    @keyframes neonInput {
+      0%, 100% {
+        border-color: #ffffff;
+        box-shadow: 0 0 5px rgba(255,255,255,0.2);
+      }
+      50% {
+        border-color: #ff1744;
+        box-shadow: 0 0 15px rgba(255, 23, 68, 0.8), 0 0 15px rgba(255, 152, 0, 0.8);
+      }
+    }
+    /* Submit button with pulsating neon red/orange gradient */
     input[type="submit"] {
       position: relative;
       background: #ff1744;
@@ -62,6 +73,7 @@
       width: 100%;
       margin-top: 15px;
       z-index: 1;
+      overflow: hidden;
     }
     input[type="submit"]::before {
       content: "";
@@ -73,13 +85,22 @@
       border-radius: inherit;
       background: linear-gradient(45deg, #ff1744, #ff9800);
       z-index: -1;
-      filter: blur(8px);
+      filter: blur(12px);
       animation: pulse 2s infinite;
     }
     @keyframes pulse {
-      0% { opacity: 0.7; }
-      50% { opacity: 1; }
-      100% { opacity: 0.7; }
+      0% {
+        opacity: 0.8;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.05);
+      }
+      100% {
+        opacity: 0.8;
+        transform: scale(1);
+      }
     }
   </style>
 </head>
