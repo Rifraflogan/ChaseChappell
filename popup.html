@@ -413,36 +413,40 @@
   
         // After 5 seconds, replace the thank you message with the video embed and neon header.
         setTimeout(() => {
-          msgDiv.innerHTML = `
-            <div id="videoHeader">
-              <div id="stepOne">STEP 1:</div>
-              <div id="videoDescription">Watch The Video Below For How The 1-ON-1 Ads Mastery Mentorship Works</div>
-            </div>
-            <div id="videoContainer">
-              <iframe width="560" height="315" src="https://www.youtube.com/embed/qsjOaYkoqDs?autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="display:block; margin:0 auto;"></iframe>
-            </div>
-          `;
-          msgDiv.style.width = "560px";
-          msgDiv.style.height = "auto";
+  msgDiv.innerHTML = `
+    <div id="videoHeader">
+      <div class="header-line">🔥 STEP 1: Watch This Now!</div>
+      <div class="header-line">📺 The video is playing—pay close attention!</div>
+      <div class="header-line">🚀 This video could change everything for your business.</div>
+    </div>
+    <div id="videoContainer">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/qsjOaYkoqDs?autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="display:block; margin:0 auto;"></iframe>
+    </div>
+    <div id="videoFooter">
+      <div class="footer-line">🔑 Key takeaway: Learn how the 1-on-1 Ad Mastery Mentorship works and why top brands swear by it.</div>
+    </div>
+  `;
+  msgDiv.style.width = "560px";
+  msgDiv.style.height = "auto";
   
-          // Fade in the dark overlay to simulate a movie theater
-          const darkOverlay = document.createElement("div");
-          darkOverlay.id = "darkOverlay";
-          darkOverlay.style.position = "fixed";
-          darkOverlay.style.top = "0";
-          darkOverlay.style.left = "0";
-          darkOverlay.style.width = "100%";
-          darkOverlay.style.height = "100%";
-          darkOverlay.style.background = "black";
-          darkOverlay.style.opacity = "0";
-          darkOverlay.style.zIndex = "2050";
-          darkOverlay.style.pointerEvents = "none";
-          darkOverlay.style.transition = "opacity 1s ease";
-          document.body.appendChild(darkOverlay);
-          setTimeout(() => {
-            darkOverlay.style.opacity = "0.8";
-          }, 100);
-        }, 5000);
+  // Optional: Fade in a dark overlay for a theater feel.
+  const darkOverlay = document.createElement("div");
+  darkOverlay.id = "darkOverlay";
+  darkOverlay.style.position = "fixed";
+  darkOverlay.style.top = "0";
+  darkOverlay.style.left = "0";
+  darkOverlay.style.width = "100%";
+  darkOverlay.style.height = "100%";
+  darkOverlay.style.background = "black";
+  darkOverlay.style.opacity = "0";
+  darkOverlay.style.zIndex = "2050";
+  darkOverlay.style.pointerEvents = "none";
+  darkOverlay.style.transition = "opacity 1s ease";
+  document.body.appendChild(darkOverlay);
+  setTimeout(() => {
+    darkOverlay.style.opacity = "0.8";
+  }, 100);
+}, 5000);
       }
   
       setTimeout(openPopup, 100);
