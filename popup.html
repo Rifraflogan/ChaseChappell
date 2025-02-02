@@ -317,6 +317,54 @@
       #stepOne { font-size: 2rem; }
       #videoDescription { font-size: 1.2rem; padding: 0 10px; }
     }
+    /* New styles for the video header and footer */
+
+/* Header above the video */
+#videoHeader {
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 0 10px;
+  word-wrap: break-word;
+}
+#videoHeader .header-line {
+  font-size: 2.5rem;
+  color: red;
+  text-shadow: 0 0 20px red, 0 0 30px red;
+  margin-bottom: 10px;
+  animation: fadeIn 1s ease forwards;
+}
+#videoHeader .header-line:nth-child(2) {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  animation-delay: 0.3s;
+}
+#videoHeader .header-line:nth-child(3) {
+  font-size: 2rem;
+  animation-delay: 0.6s;
+}
+
+/* Footer below the video */
+#videoFooter .footer-line {
+  font-size: 1.5rem;
+  color: red;
+  text-align: center;
+  margin-top: 20px;
+  animation: fadeIn 1s ease forwards;
+}
+
+/* Ensure mobile responsiveness for these elements */
+@media (max-width: 480px) {
+  #videoHeader .header-line {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+    padding: 0 10px;
+  }
+  #videoFooter .footer-line {
+    font-size: 1.2rem;
+    margin-top: 15px;
+    padding: 0 10px;
+  }
+}
   </style>
 </head>
 <body>
