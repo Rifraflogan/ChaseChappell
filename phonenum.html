@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Phone Number Capture</title>
   <style>
-    /* Global reset */
+    /* Global Reset */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-    /* Ultra modern dark gradient background */
+    /* Background and body styles */
     body {
       background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
       font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -19,6 +19,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      overflow: hidden;
     }
     /* Static white container */
     .form-container {
@@ -28,14 +29,16 @@
       width: 90%;
       max-width: 400px;
       text-align: center;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 1;
     }
     .form-container h2 {
       margin-bottom: 20px;
       font-size: 1.5em;
       color: #333;
     }
-    /* Phone number input with animated neon border effect */
+    /* Neon animated phone number input */
     input[type="tel"] {
       width: 100%;
       padding: 12px;
@@ -51,15 +54,15 @@
     }
     @keyframes neonInput {
       0%, 100% {
-        border-color: #ffffff;
-        box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+        border-color: #fff;
+        box-shadow: 0 0 5px rgba(255,255,255,0.2);
       }
       50% {
         border-color: #ff1744;
-        box-shadow: 0 0 15px rgba(255, 23, 68, 0.8), 0 0 15px rgba(255, 152, 0, 0.8);
+        box-shadow: 0 0 15px rgba(255,23,68,0.8), 0 0 15px rgba(255,152,0,0.8);
       }
     }
-    /* Button wrapper to hold the submit button and fire emoji */
+    /* Button wrapper for submit button and fire emoji */
     .button-wrapper {
       display: flex;
       align-items: center;
@@ -69,7 +72,7 @@
     .fire-emoji {
       font-size: 1.5em;
     }
-    /* Submit button with animated red/orange neon gradient and pulsating glow */
+    /* Neon animated submit button */
     input[type="submit"] {
       position: relative;
       background: linear-gradient(45deg, #ff1744, #ff9800, #ff1744);
@@ -83,37 +86,76 @@
       width: 100%;
       margin-top: 15px;
       overflow: hidden;
-      /* Combine two animations: one for the gradient shift and one for the pulsating glow */
       animation: neonGradient 3s linear infinite, neonPulse 2s infinite;
     }
     @keyframes neonGradient {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
     @keyframes neonPulse {
+      0% { box-shadow: 0 0 5px rgba(255,255,255,0.7); }
+      50% { box-shadow: 0 0 20px rgba(255,23,68,1), 0 0 20px rgba(255,152,0,1); }
+      100% { box-shadow: 0 0 5px rgba(255,255,255,0.7); }
+    }
+    /* Fire overlay styles */
+    #fire-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      z-index: 9999;
+    }
+    /* When active, the overlay animates a fiery background */
+    #fire-overlay.active {
+      visibility: visible;
+      animation: fireAnimation 3s forwards;
+    }
+    @keyframes fireAnimation {
       0% {
-        box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+        opacity: 0;
+        transform: scale(0.8);
+        background: rgba(0,0,0,0);
       }
-      50% {
-        box-shadow: 0 0 20px rgba(255, 23, 68, 1), 0 0 20px rgba(255, 152, 0, 1);
+      30% {
+        opacity: 1;
+        transform: scale(1);
+        background: radial-gradient(circle, rgba(255,69,0,1) 0%, rgba(255,140,0,1) 50%, rgba(255,215,0,1) 100%);
+      }
+      70% {
+        background: radial-gradient(circle, rgba(255,69,0,1) 0%, rgba(255,105,0,1) 50%, rgba(255,165,0,1) 100%);
       }
       100% {
-        box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+        opacity: 1;
+        transform: scale(1);
+        background: radial-gradient(circle, rgba(255,0,0,1) 0%, rgba(255,69,0,1) 50%, rgba(255,140,0,1) 100%);
       }
+    }
+    /* Overlay text fade in */
+    #fire-overlay .overlay-text {
+      position: absolute;
+      color: #fff;
+      font-size: 2em;
+      text-align: center;
+      opacity: 0;
+      animation: textFadeIn 1s forwards 2.5s;
+    }
+    @keyframes textFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
   </style>
 </head>
 <body>
   <div class="form-container">
     <h2>Enter to Get Notified</h2>
-    <form action="#" method="POST">
+    <form id="phone-form" action="#" method="POST">
       <input type="tel" name="phone" placeholder="Phone Number" required>
       <div class="button-wrapper">
         <input type="submit" value="Submit">
@@ -121,5 +163,21 @@
       </div>
     </form>
   </div>
+  <!-- Fire overlay that covers the screen on submit -->
+  <div id="fire-overlay">
+    <div class="overlay-text">Congratulations. Your spot is confirmed.</div>
+  </div>
+  <script>
+    document.getElementById('phone-form').addEventListener('submit', function(e) {
+      e.preventDefault(); // Stop the form from submitting normally
+      // Trigger the fire overlay animation
+      var overlay = document.getElementById('fire-overlay');
+      overlay.classList.add('active');
+      // Optionally hide the form after the animation starts
+      setTimeout(function() {
+        document.querySelector('.form-container').style.display = 'none';
+      }, 3000); // Matches the duration of the fire animation
+    });
+  </script>
 </body>
 </html>
