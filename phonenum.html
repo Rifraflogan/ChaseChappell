@@ -102,8 +102,8 @@
     #shockwave-overlay.active {
       display: block;
     }
-    /* Ultra‑Dope Fire Emoji Shockwave – 20 emojis burst outward */
-    #shockwave-overlay .fire {
+    /* Base styling for fire emoji elements */
+    .fire {
       position: absolute;
       left: 50%;
       top: 50%;
@@ -111,27 +111,6 @@
       opacity: 1;
       animation: shockwave 1.5s forwards;
     }
-    /* Define angles and staggered delays for 20 fire emojis */
-    #shockwave-overlay .fire:nth-child(1)  { --angle: 0deg;    animation-delay: 0s; }
-    #shockwave-overlay .fire:nth-child(2)  { --angle: 18deg;   animation-delay: 0.03s; }
-    #shockwave-overlay .fire:nth-child(3)  { --angle: 36deg;   animation-delay: 0.06s; }
-    #shockwave-overlay .fire:nth-child(4)  { --angle: 54deg;   animation-delay: 0.09s; }
-    #shockwave-overlay .fire:nth-child(5)  { --angle: 72deg;   animation-delay: 0.12s; }
-    #shockwave-overlay .fire:nth-child(6)  { --angle: 90deg;   animation-delay: 0.15s; }
-    #shockwave-overlay .fire:nth-child(7)  { --angle: 108deg;  animation-delay: 0.18s; }
-    #shockwave-overlay .fire:nth-child(8)  { --angle: 126deg;  animation-delay: 0.21s; }
-    #shockwave-overlay .fire:nth-child(9)  { --angle: 144deg;  animation-delay: 0.24s; }
-    #shockwave-overlay .fire:nth-child(10) { --angle: 162deg;  animation-delay: 0.27s; }
-    #shockwave-overlay .fire:nth-child(11) { --angle: 180deg;  animation-delay: 0.30s; }
-    #shockwave-overlay .fire:nth-child(12) { --angle: 198deg;  animation-delay: 0.33s; }
-    #shockwave-overlay .fire:nth-child(13) { --angle: 216deg;  animation-delay: 0.36s; }
-    #shockwave-overlay .fire:nth-child(14) { --angle: 234deg;  animation-delay: 0.39s; }
-    #shockwave-overlay .fire:nth-child(15) { --angle: 252deg;  animation-delay: 0.42s; }
-    #shockwave-overlay .fire:nth-child(16) { --angle: 270deg;  animation-delay: 0.45s; }
-    #shockwave-overlay .fire:nth-child(17) { --angle: 288deg;  animation-delay: 0.48s; }
-    #shockwave-overlay .fire:nth-child(18) { --angle: 306deg;  animation-delay: 0.51s; }
-    #shockwave-overlay .fire:nth-child(19) { --angle: 324deg;  animation-delay: 0.54s; }
-    #shockwave-overlay .fire:nth-child(20) { --angle: 342deg;  animation-delay: 0.57s; }
     @keyframes shockwave {
       0% {
         transform: rotate(var(--angle)) translateX(0) scale(1);
@@ -147,7 +126,7 @@
       }
     }
     /* Overlay Text – fades in after the shockwave */
-    #shockwave-overlay .overlay-text {
+    .overlay-text {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -179,37 +158,37 @@
       <input type="submit" value="Submit🔥">
     </form>
   </div>
-  <!-- Shockwave Overlay with Fire Emojis and Confirmation Text -->
+  <!-- Shockwave Overlay Container (Emojis will be injected via JavaScript) -->
   <div id="shockwave-overlay">
-    <span class="fire">🔥</span>
-    <span class="fire">🔥</span>
-    <span class="fire">🔥</span>
-    <span class="fire">🔥</span>
-    <span class="fire">🔥</span>
-    <span class="fire">🔥</span>
-    <span class="fire">🔥</span>
-    <span class="fire">🔥</span>
-    <span class="fire">🔥</span>
-    <span class="fire">🔥</span>
-    <span class="fire">🔥</span>
-    <span class="fire">🔥</span>
-    <span class="fire">🔥</span>
-    <span class="fire">🔥</span>
-    <span class="fire">🔥</span>
-    <span class="fire">🔥</span>
-    <span class="fire">🔥</span>
-    <span class="fire">🔥</span>
-    <span class="fire">🔥</span>
-    <span class="fire">🔥</span>
     <div class="overlay-text">Congratulations. Your spot is confirmed.</div>
   </div>
   <script>
+    // Efficiently generate fire emoji elements for the shockwave animation.
+    (function() {
+      const overlay = document.getElementById('shockwave-overlay');
+      const count = 20;       // Number of emoji elements to generate.
+      const emoji = '🔥';     // The emoji to use.
+      const delayFactor = 0.03; // Incremental delay (in seconds) per emoji.
+      for (let i = 0; i < count; i++) {
+        const span = document.createElement('span');
+        span.className = 'fire';
+        span.textContent = emoji;
+        // Set the rotation angle for this emoji.
+        const angle = (360 / count) * i;
+        span.style.setProperty('--angle', `${angle}deg`);
+        // Set the animation delay.
+        span.style.animationDelay = `${delayFactor * i}s`;
+        overlay.appendChild(span);
+      }
+    })();
+    
+    // When the form is submitted, trigger the shockwave animation.
     document.getElementById('phone-form').addEventListener('submit', function(e) {
-      e.preventDefault(); // Prevent form submission
-      var overlay = document.getElementById('shockwave-overlay');
+      e.preventDefault(); // Prevent the default form submission.
+      const overlay = document.getElementById('shockwave-overlay');
       overlay.classList.add('active');
-      // Hide the form container after the shockwave effect (1.5s)
-      setTimeout(function() {
+      // Optionally hide the form container after the animation completes.
+      setTimeout(() => {
         document.querySelector('.form-container').style.display = 'none';
       }, 1500);
     });
