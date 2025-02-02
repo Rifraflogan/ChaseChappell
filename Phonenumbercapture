@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phone Number Capture</title>
+  <style>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #121212;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    /* Container styling */
+    .form-container {
+      background: #1e1e1e;
+      border: 2px solid rgba(255, 0, 0, 0.7);
+      border-radius: 15px;
+      padding: 20px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      position: relative;
+      animation: pulse 2s infinite;
+    }
+    /* Pulsing neon red glow */
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+      }
+      50% {
+        box-shadow: 0 0 20px rgba(255, 0, 0, 1);
+      }
+      100% {
+        box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+      }
+    }
+    /* Form header */
+    .form-container h2 {
+      margin-bottom: 20px;
+      font-size: 1.5em;
+    }
+    /* Input styles */
+    input[type="tel"] {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      margin-bottom: 15px;
+    }
+    input[type="tel"]::placeholder {
+      color: #bbb;
+    }
+    /* Submit button styles */
+    input[type="submit"] {
+      background-color: #ff1744;
+      border: none;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background-color 0.3s ease;
+    }
+    input[type="submit"]:hover {
+      background-color: #d50000;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Enter Phone Number</h2>
+    <form action="#" method="POST">
+      <input type="tel" name="phone" placeholder="Phone Number" required>
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+</body>
+</html>
