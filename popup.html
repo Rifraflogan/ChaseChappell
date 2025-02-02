@@ -113,6 +113,17 @@
       line-height: 1.5;
     }
     
+    /* Updated Text for the Email Popup */
+    .popup-content h2 {
+      /* New header text */
+      font-size: 2rem;
+      text-align: center;
+      color: var(--text-color);
+    }
+    .popup-content .note {
+      white-space: pre-line; /* Preserve line breaks */
+    }
+    
     /* Form Styles */
     #emailCaptureForm {
       display: flex;
@@ -273,46 +284,38 @@
     }
     
     /* Neon Red Header Above the Video */
-    #videoHeading {
+    #videoHeader {
       text-align: center;
       margin-bottom: 20px;
+      padding: 0 10px;
+      word-wrap: break-word;
     }
     #stepOne {
       font-size: 2.5rem;
       color: red;
       text-shadow: 0 0 20px red, 0 0 30px red;
       animation: fadeIn 1s ease forwards;
+      margin-bottom: 10px;
     }
     #videoDescription {
       font-size: 1.5rem;
       color: red;
+      padding: 0 10px;
+      text-align: center;
+      word-wrap: break-word;
       animation: fadeIn 1s ease forwards;
       animation-delay: 0.5s;
     }
     
-    /* Responsive Adjustments */
+    /* Mobile adjustments */
     @media (max-width:480px) {
-      #popup {
-        padding: 30px 20px;
-      }
-      .popup-content h2 {
-        font-size: 1.8rem;
-      }
-      /* Adjust video header for mobile */
-      #videoHeading {
-        padding: 0 10px;
-      }
-      #stepOne {
-        font-size: 1.8rem;
-      }
-      #videoDescription {
-        font-size: 1.2rem;
-      }
-      /* Also adjust video container width */
-      #videoContainer {
-        width: 90%;
-        height: auto;
-      }
+      #popup { padding: 30px 20px; }
+      .popup-content h2 { font-size: 1.8rem; padding: 0 10px; text-align: center; }
+      .note { font-size: 0.9rem; padding: 0 10px; text-align: center; }
+      .input-wrapper, #ctaButton { width: 90%; }
+      #videoContainer { width: 90%; height: auto; }
+      #stepOne { font-size: 2rem; }
+      #videoDescription { font-size: 1.2rem; padding: 0 10px; }
     }
   </style>
 </head>
@@ -324,23 +327,20 @@
   <div id="popup">
     <span class="close-btn">&times;</span>
     <div class="popup-content">
-      <h2>Enter your info below and we'll send you a short video on how this works:</h2>
+      <!-- Updated Popup Text -->
+      <h2>🚀 Want to Scale Your Shopify Brand?</h2>
       <p class="note">
-        <strong>***If You’re NOT a Shopify Ecommerce Brand Doing at Least $20k+ per month… This video is not for you***</strong>
+        Enter your info below, and we’ll send you a short video on how it works! 🎥👇<br><br>
+        ⚠️ Important:<br>
+        🔹 If you’re NOT a Shopify eCommerce brand doing at least $20K+ per month…<br>
+        🚫 This video isn’t for you.<br><br>
+        📩 Drop your email below to get instant access!
       </p>
       <form id="emailCaptureForm">
         <div class="input-wrapper">
-          <input 
-            type="email" 
-            name="email" 
-            id="emailInput" 
-            placeholder="Enter your email address"
-            required 
-          />
+          <input type="email" name="email" id="emailInput" placeholder="Enter your email address" required />
         </div>
-        <button type="submit" id="ctaButton">
-          Get The FREE Training &raquo;
-        </button>
+        <button type="submit" id="ctaButton">✅ Get The FREE Training &raquo;</button>
       </form>
     </div>
   </div>
@@ -400,11 +400,11 @@
         }, 1500);
       }
   
-      // Function to show thank you message and then embed the video with neon header
+      // Function to show thank you message and then embed the video with neon header and dark overlay
       function showThankYouMessage() {
         const msgDiv = document.createElement("div");
         msgDiv.id = "thankYouMessage";
-        // Final message: "CHA-CHING" with pop animation, then only "More sales are on the way."
+        // Final message: "CHA-CHING" with pop animation, then "More sales are on the way."
         msgDiv.innerHTML = "<span id='thankYouText'><span class='cha-chings'>CHA-CHING</span></span><br><span id='moreMessage'>More sales are on the way.</span>";
         document.body.appendChild(msgDiv);
         void msgDiv.offsetWidth;
@@ -414,7 +414,7 @@
         // After 5 seconds, replace the thank you message with the video embed and neon header.
         setTimeout(() => {
           msgDiv.innerHTML = `
-            <div id="videoHeading">
+            <div id="videoHeader">
               <div id="stepOne">STEP 1:</div>
               <div id="videoDescription">Watch The Video Below For How The 1-ON-1 Ads Mastery Mentorship Works</div>
             </div>
@@ -425,7 +425,7 @@
           msgDiv.style.width = "560px";
           msgDiv.style.height = "auto";
   
-          // Fade in the dark overlay to simulate a movie theater effect
+          // Fade in the dark overlay to simulate a movie theater
           const darkOverlay = document.createElement("div");
           darkOverlay.id = "darkOverlay";
           darkOverlay.style.position = "fixed";
