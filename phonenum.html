@@ -125,7 +125,7 @@
         opacity: 0;
       }
     }
-    /* Overlay Text Common Styling */
+    /* Common styling for overlay texts */
     .overlay-text {
       position: absolute;
       top: 50%;
@@ -140,15 +140,15 @@
       text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
       opacity: 0;
     }
-    /* First message: "Congratulations" fades in then out */
+    /* "Congratulations" message fades in then out */
     .overlay-text-first {
       animation: fadeInOut 2s forwards;
-      animation-delay: 1s;
+      animation-delay: 4.5s;
     }
-    /* Second message: "Your spot is reserved" fades in */
+    /* "Your spot is reserved" message fades in */
     .overlay-text-second {
       animation: fadeIn 1s forwards;
-      animation-delay: 3s;
+      animation-delay: 6.6s;
     }
     @keyframes fadeInOut {
       0% { opacity: 0; }
@@ -172,9 +172,8 @@
       <input type="submit" value="Submit🔥">
     </form>
   </div>
-  <!-- Shockwave Overlay Container (Emojis and overlay texts will be injected) -->
+  <!-- Shockwave Overlay Container (Fire emojis and overlay texts injected dynamically) -->
   <div id="shockwave-overlay">
-    <!-- The fire emojis will be injected by JavaScript -->
     <div class="overlay-text overlay-text-first">Congratulations</div>
     <div class="overlay-text overlay-text-second">Your spot is reserved</div>
   </div>
@@ -203,7 +202,7 @@
       e.preventDefault(); // Prevent default form submission.
       const overlay = document.getElementById('shockwave-overlay');
       overlay.classList.add('active');
-      // Hide the form container after the complete overlay sequence (4 seconds).
+      // Hide the form container after 4 seconds (ensuring it is off-screen)
       setTimeout(() => {
         document.querySelector('.form-container').style.display = 'none';
       }, 4000);
