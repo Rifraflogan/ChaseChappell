@@ -142,13 +142,13 @@
     }
     /* "Congratulations" message fades in then out */
     .overlay-text-first {
-      animation: fadeInOut 2s forwards;
-      animation-delay: 4.5s;
+      animation: fadeInOut 1.5s forwards;
+      animation-delay: 1.6s;
     }
     /* "Your spot is reserved" message fades in */
     .overlay-text-second {
       animation: fadeIn 1s forwards;
-      animation-delay: 6.6s;
+      animation-delay: 3.2s;
     }
     @keyframes fadeInOut {
       0% { opacity: 0; }
@@ -202,10 +202,10 @@
       e.preventDefault(); // Prevent default form submission.
       const overlay = document.getElementById('shockwave-overlay');
       overlay.classList.add('active');
-      // Hide the form container after 4 seconds (ensuring it is off-screen)
+      // Hide the form container after 1.5 seconds so it's off-screen.
       setTimeout(() => {
         document.querySelector('.form-container').style.display = 'none';
-      }, 4000);
+      }, 1500);
     });
   </script>
 </body>
