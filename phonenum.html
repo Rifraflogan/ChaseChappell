@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Phone Number Capture</title>
+  <!-- Importing a bold, tough font from Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
   <style>
     /* Global Reset */
     * {
@@ -11,15 +13,17 @@
       padding: 0;
       box-sizing: border-box;
     }
-    /* Body Background & Centering */
+    /* Body Background & Centering with a Bold Font */
     body {
       background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
-      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
       height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       overflow: hidden;
+      color: #fff;
     }
     /* White Form Container */
     .form-container {
@@ -29,14 +33,16 @@
       width: 90%;
       max-width: 400px;
       text-align: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       position: relative;
       z-index: 1;
     }
     .form-container h2 {
       margin-bottom: 20px;
-      font-size: 1.5em;
+      font-size: 1.8em;
       color: #333;
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
     /* Neon Animated Input Field */
     input[type="tel"] {
@@ -48,6 +54,7 @@
       margin-bottom: 15px;
       outline: none;
       animation: neonInput 2s infinite;
+      font-family: 'Oswald', sans-serif;
     }
     input[type="tel"]::placeholder {
       color: #aaa;
@@ -75,6 +82,9 @@
       width: 100%;
       margin-top: 15px;
       overflow: hidden;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: 'Oswald', sans-serif;
     }
     /* Shockwave Overlay – initially hidden */
     #shockwave-overlay {
@@ -148,6 +158,9 @@
       animation: textFadeIn 1s forwards 1.6s;
       padding: 0 20px;
       width: 100%;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
     }
     @keyframes textFadeIn {
       from { opacity: 0; }
