@@ -76,7 +76,7 @@
       margin-top: 15px;
       overflow: hidden;
     }
-    /* Shockwave Overlay (hidden by default) */
+    /* Shockwave Overlay – initially hidden */
     #shockwave-overlay {
       position: fixed;
       top: 0;
@@ -90,37 +90,52 @@
     #shockwave-overlay.active {
       display: block;
     }
-    /* Fire Emoji Shockwave – 10 emojis burst outward */
+    /* Fire Emoji Shockwave – 20 emojis burst outward */
     #shockwave-overlay .fire {
       position: absolute;
       left: 50%;
       top: 50%;
-      font-size: 2em;
+      font-size: 2.5em;
       opacity: 1;
-      animation: shockwave 1s forwards;
+      animation: shockwave 1.5s forwards;
     }
-    /* Assign different directions and delays to each fire emoji */
-    #shockwave-overlay .fire:nth-child(1) { --angle: 0deg;    animation-delay: 0s; }
-    #shockwave-overlay .fire:nth-child(2) { --angle: 36deg;   animation-delay: 0.05s; }
-    #shockwave-overlay .fire:nth-child(3) { --angle: 72deg;   animation-delay: 0.1s; }
-    #shockwave-overlay .fire:nth-child(4) { --angle: 108deg;  animation-delay: 0.15s; }
-    #shockwave-overlay .fire:nth-child(5) { --angle: 144deg;  animation-delay: 0.2s; }
-    #shockwave-overlay .fire:nth-child(6) { --angle: 180deg;  animation-delay: 0.25s; }
-    #shockwave-overlay .fire:nth-child(7) { --angle: 216deg;  animation-delay: 0.3s; }
-    #shockwave-overlay .fire:nth-child(8) { --angle: 252deg;  animation-delay: 0.35s; }
-    #shockwave-overlay .fire:nth-child(9) { --angle: 288deg;  animation-delay: 0.4s; }
-    #shockwave-overlay .fire:nth-child(10) { --angle: 324deg; animation-delay: 0.45s; }
+    /* Define angles and staggered delays for 20 fire emojis */
+    #shockwave-overlay .fire:nth-child(1)  { --angle: 0deg;    animation-delay: 0s;    }
+    #shockwave-overlay .fire:nth-child(2)  { --angle: 18deg;   animation-delay: 0.03s; }
+    #shockwave-overlay .fire:nth-child(3)  { --angle: 36deg;   animation-delay: 0.06s; }
+    #shockwave-overlay .fire:nth-child(4)  { --angle: 54deg;   animation-delay: 0.09s; }
+    #shockwave-overlay .fire:nth-child(5)  { --angle: 72deg;   animation-delay: 0.12s; }
+    #shockwave-overlay .fire:nth-child(6)  { --angle: 90deg;   animation-delay: 0.15s; }
+    #shockwave-overlay .fire:nth-child(7)  { --angle: 108deg;  animation-delay: 0.18s; }
+    #shockwave-overlay .fire:nth-child(8)  { --angle: 126deg;  animation-delay: 0.21s; }
+    #shockwave-overlay .fire:nth-child(9)  { --angle: 144deg;  animation-delay: 0.24s; }
+    #shockwave-overlay .fire:nth-child(10) { --angle: 162deg;  animation-delay: 0.27s; }
+    #shockwave-overlay .fire:nth-child(11) { --angle: 180deg;  animation-delay: 0.30s; }
+    #shockwave-overlay .fire:nth-child(12) { --angle: 198deg;  animation-delay: 0.33s; }
+    #shockwave-overlay .fire:nth-child(13) { --angle: 216deg;  animation-delay: 0.36s; }
+    #shockwave-overlay .fire:nth-child(14) { --angle: 234deg;  animation-delay: 0.39s; }
+    #shockwave-overlay .fire:nth-child(15) { --angle: 252deg;  animation-delay: 0.42s; }
+    #shockwave-overlay .fire:nth-child(16) { --angle: 270deg;  animation-delay: 0.45s; }
+    #shockwave-overlay .fire:nth-child(17) { --angle: 288deg;  animation-delay: 0.48s; }
+    #shockwave-overlay .fire:nth-child(18) { --angle: 306deg;  animation-delay: 0.51s; }
+    #shockwave-overlay .fire:nth-child(19) { --angle: 324deg;  animation-delay: 0.54s; }
+    #shockwave-overlay .fire:nth-child(20) { --angle: 342deg;  animation-delay: 0.57s; }
+    /* Enhanced Shockwave Animation */
     @keyframes shockwave {
       0% {
         transform: rotate(var(--angle)) translateX(0) scale(1);
         opacity: 1;
       }
+      50% {
+        transform: rotate(calc(var(--angle) + 15deg)) translateX(350px) scale(1.5);
+        opacity: 0.8;
+      }
       100% {
-        transform: rotate(var(--angle)) translateX(300px) scale(2);
+        transform: rotate(calc(var(--angle) + 30deg)) translateX(400px) scale(2);
         opacity: 0;
       }
     }
-    /* Overlay Text (fades in after the shockwave) */
+    /* Overlay Text – fades in after the shockwave */
     #shockwave-overlay .overlay-text {
       position: absolute;
       top: 50%;
@@ -130,7 +145,7 @@
       font-size: 2.5em;
       text-align: center;
       opacity: 0;
-      animation: textFadeIn 1s forwards 0.8s;
+      animation: textFadeIn 1s forwards 1.6s;
       padding: 0 20px;
       width: 100%;
     }
@@ -160,17 +175,27 @@
     <span class="fire">🔥</span>
     <span class="fire">🔥</span>
     <span class="fire">🔥</span>
+    <span class="fire">🔥</span>
+    <span class="fire">🔥</span>
+    <span class="fire">🔥</span>
+    <span class="fire">🔥</span>
+    <span class="fire">🔥</span>
+    <span class="fire">🔥</span>
+    <span class="fire">🔥</span>
+    <span class="fire">🔥</span>
+    <span class="fire">🔥</span>
+    <span class="fire">🔥</span>
     <div class="overlay-text">Congratulations. Your spot is confirmed.</div>
   </div>
   <script>
     document.getElementById('phone-form').addEventListener('submit', function(e) {
-      e.preventDefault(); // Prevent normal form submission
+      e.preventDefault(); // Prevent form submission
       var overlay = document.getElementById('shockwave-overlay');
       overlay.classList.add('active');
-      // Hide the form container after the shockwave animation completes (1 second)
+      // Hide the form container after the shockwave effect (1.5s)
       setTimeout(function() {
         document.querySelector('.form-container').style.display = 'none';
-      }, 1000);
+      }, 1500);
     });
   </script>
 </body>
