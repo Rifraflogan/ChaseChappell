@@ -11,7 +11,7 @@
       padding: 0;
       box-sizing: border-box;
     }
-    /* Background and body styles */
+    /* Body Background & Centering */
     body {
       background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
       font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -21,7 +21,7 @@
       align-items: center;
       overflow: hidden;
     }
-    /* Static white container */
+    /* White Form Container */
     .form-container {
       background: #fff;
       border-radius: 15px;
@@ -38,7 +38,7 @@
       font-size: 1.5em;
       color: #333;
     }
-    /* Neon animated phone number input */
+    /* Neon Animated Input Field */
     input[type="tel"] {
       width: 100%;
       padding: 12px;
@@ -62,7 +62,7 @@
         box-shadow: 0 0 15px rgba(255,23,68,0.8), 0 0 15px rgba(255,152,0,0.8);
       }
     }
-    /* Neon animated submit button with fire emoji in its label */
+    /* Neon Animated Submit Button with Fire Emoji in Label */
     input[type="submit"] {
       position: relative;
       background: linear-gradient(45deg, #ff1744, #ff9800, #ff1744);
@@ -88,53 +88,75 @@
       50% { box-shadow: 0 0 20px rgba(255,23,68,1), 0 0 20px rgba(255,152,0,1); }
       100% { box-shadow: 0 0 5px rgba(255,255,255,0.7); }
     }
-    /* Fire overlay styles */
+    /* Full-Screen Fire Overlay */
     #fire-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      visibility: hidden;
       z-index: 9999;
+      pointer-events: none;
+      opacity: 0;
+      /* Base background with a fiery radial gradient */
+      background: radial-gradient(circle at center, #ff9a00, #ff0000, #ff9a00, transparent 80%);
+      animation: fireExplosion 3s forwards;
     }
-    /* When active, the overlay animates a fiery background */
-    #fire-overlay.active {
-      visibility: visible;
-      animation: fireAnimation 3s forwards;
-    }
-    @keyframes fireAnimation {
+    /* Intense Fire Explosion Animation */
+    @keyframes fireExplosion {
       0% {
         opacity: 0;
         transform: scale(0.8);
-        background: rgba(0,0,0,0);
+        filter: blur(0px) brightness(1);
+      }
+      10% {
+        opacity: 1;
+        transform: scale(1.2);
+        filter: blur(2px) brightness(3);
       }
       30% {
-        opacity: 1;
-        transform: scale(1);
-        background: radial-gradient(circle, rgba(255,69,0,1) 0%, rgba(255,140,0,1) 50%, rgba(255,215,0,1) 100%);
+        transform: scale(1.5);
+        filter: blur(4px) brightness(5);
+      }
+      50% {
+        transform: scale(1.6);
+        filter: blur(6px) brightness(6);
       }
       70% {
-        background: radial-gradient(circle, rgba(255,69,0,1) 0%, rgba(255,105,0,1) 50%, rgba(255,165,0,1) 100%);
+        transform: scale(1.4);
+        filter: blur(4px) brightness(4);
       }
       100% {
         opacity: 1;
         transform: scale(1);
-        background: radial-gradient(circle, rgba(255,0,0,1) 0%, rgba(255,69,0,1) 50%, rgba(255,140,0,1) 100%);
+        filter: blur(0px) brightness(2);
       }
     }
-    /* Overlay text fade in */
+    /* Additional Flicker Effect for Extra Intensity */
+    #fire-overlay::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, rgba(255,200,0,0.6), transparent 70%);
+      animation: fireFlicker 0.5s infinite;
+    }
+    @keyframes fireFlicker {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
+    }
+    /* Overlay Text Revealed After the Fire Explosion */
     #fire-overlay .overlay-text {
       position: absolute;
       color: #fff;
-      font-size: 2em;
+      font-size: 2.5em;
       text-align: center;
       opacity: 0;
       animation: textFadeIn 1s forwards 2.5s;
+      width: 100%;
+      padding: 0 20px;
     }
     @keyframes textFadeIn {
       from { opacity: 0; }
@@ -150,20 +172,24 @@
       <input type="submit" value="Submit🔥">
     </form>
   </div>
-  <!-- Fire overlay that covers the screen on submit -->
+  <!-- Fire Overlay That Engulfs the Screen -->
   <div id="fire-overlay">
     <div class="overlay-text">Congratulations. Your spot is confirmed.</div>
   </div>
   <script>
     document.getElementById('phone-form').addEventListener('submit', function(e) {
-      e.preventDefault(); // Stop the form from submitting normally
-      // Trigger the fire overlay animation
+      e.preventDefault(); // Prevent normal form submission
       var overlay = document.getElementById('fire-overlay');
-      overlay.classList.add('active');
-      // Optionally hide the form after the animation starts
+      // Restart the fire explosion animation by forcing reflow
+      overlay.style.animation = 'none';
+      void overlay.offsetWidth; // Trigger reflow
+      overlay.style.animation = null;
+      // Allow pointer events (if needed) and reveal overlay
+      overlay.style.pointerEvents = 'auto';
+      // Hide the form container after the fire animation completes (3s)
       setTimeout(function() {
         document.querySelector('.form-container').style.display = 'none';
-      }, 3000); // Matches the duration of the fire animation
+      }, 3000);
     });
   </script>
 </body>
