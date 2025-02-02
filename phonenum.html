@@ -62,11 +62,10 @@
         box-shadow: 0 0 15px rgba(255,23,68,0.8), 0 0 15px rgba(255,152,0,0.8);
       }
     }
-    /* Neon Animated Submit Button with Fire Emoji in Label */
+    /* Static Neon Submit Button with Fire Emoji in Label */
     input[type="submit"] {
       position: relative;
-      background: linear-gradient(45deg, #ff1744, #ff9800, #ff1744);
-      background-size: 200% 200%;
+      background: linear-gradient(45deg, #ff1744, #ff9800);
       border: none;
       color: #fff;
       padding: 12px 20px;
@@ -76,87 +75,64 @@
       width: 100%;
       margin-top: 15px;
       overflow: hidden;
-      animation: neonGradient 3s linear infinite, neonPulse 2s infinite;
     }
-    @keyframes neonGradient {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    @keyframes neonPulse {
-      0% { box-shadow: 0 0 5px rgba(255,255,255,0.7); }
-      50% { box-shadow: 0 0 20px rgba(255,23,68,1), 0 0 20px rgba(255,152,0,1); }
-      100% { box-shadow: 0 0 5px rgba(255,255,255,0.7); }
-    }
-    /* Full-Screen Fire Overlay */
-    #fire-overlay {
+    /* Shockwave Overlay (hidden by default) */
+    #shockwave-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 9999;
       pointer-events: none;
-      opacity: 0;
-      /* Base background with a fiery radial gradient */
-      background: radial-gradient(circle at center, #ff9a00, #ff0000, #ff9a00, transparent 80%);
-      animation: fireExplosion 3s forwards;
+      z-index: 9999;
+      display: none;
     }
-    /* Intense Fire Explosion Animation */
-    @keyframes fireExplosion {
+    #shockwave-overlay.active {
+      display: block;
+    }
+    /* Fire Emoji Shockwave – 10 emojis burst outward */
+    #shockwave-overlay .fire {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      font-size: 2em;
+      opacity: 1;
+      animation: shockwave 1s forwards;
+    }
+    /* Assign different directions and delays to each fire emoji */
+    #shockwave-overlay .fire:nth-child(1) { --angle: 0deg;    animation-delay: 0s; }
+    #shockwave-overlay .fire:nth-child(2) { --angle: 36deg;   animation-delay: 0.05s; }
+    #shockwave-overlay .fire:nth-child(3) { --angle: 72deg;   animation-delay: 0.1s; }
+    #shockwave-overlay .fire:nth-child(4) { --angle: 108deg;  animation-delay: 0.15s; }
+    #shockwave-overlay .fire:nth-child(5) { --angle: 144deg;  animation-delay: 0.2s; }
+    #shockwave-overlay .fire:nth-child(6) { --angle: 180deg;  animation-delay: 0.25s; }
+    #shockwave-overlay .fire:nth-child(7) { --angle: 216deg;  animation-delay: 0.3s; }
+    #shockwave-overlay .fire:nth-child(8) { --angle: 252deg;  animation-delay: 0.35s; }
+    #shockwave-overlay .fire:nth-child(9) { --angle: 288deg;  animation-delay: 0.4s; }
+    #shockwave-overlay .fire:nth-child(10) { --angle: 324deg; animation-delay: 0.45s; }
+    @keyframes shockwave {
       0% {
-        opacity: 0;
-        transform: scale(0.8);
-        filter: blur(0px) brightness(1);
-      }
-      10% {
+        transform: rotate(var(--angle)) translateX(0) scale(1);
         opacity: 1;
-        transform: scale(1.2);
-        filter: blur(2px) brightness(3);
-      }
-      30% {
-        transform: scale(1.5);
-        filter: blur(4px) brightness(5);
-      }
-      50% {
-        transform: scale(1.6);
-        filter: blur(6px) brightness(6);
-      }
-      70% {
-        transform: scale(1.4);
-        filter: blur(4px) brightness(4);
       }
       100% {
-        opacity: 1;
-        transform: scale(1);
-        filter: blur(0px) brightness(2);
+        transform: rotate(var(--angle)) translateX(300px) scale(2);
+        opacity: 0;
       }
     }
-    /* Additional Flicker Effect for Extra Intensity */
-    #fire-overlay::after {
-      content: "";
+    /* Overlay Text (fades in after the shockwave) */
+    #shockwave-overlay .overlay-text {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle at center, rgba(255,200,0,0.6), transparent 70%);
-      animation: fireFlicker 0.5s infinite;
-    }
-    @keyframes fireFlicker {
-      0%, 100% { opacity: 0.7; }
-      50% { opacity: 1; }
-    }
-    /* Overlay Text Revealed After the Fire Explosion */
-    #fire-overlay .overlay-text {
-      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       color: #fff;
       font-size: 2.5em;
       text-align: center;
       opacity: 0;
-      animation: textFadeIn 1s forwards 2.5s;
-      width: 100%;
+      animation: textFadeIn 1s forwards 0.8s;
       padding: 0 20px;
+      width: 100%;
     }
     @keyframes textFadeIn {
       from { opacity: 0; }
@@ -172,24 +148,29 @@
       <input type="submit" value="Submit🔥">
     </form>
   </div>
-  <!-- Fire Overlay That Engulfs the Screen -->
-  <div id="fire-overlay">
+  <!-- Shockwave Overlay with Fire Emojis and Confirmation Text -->
+  <div id="shockwave-overlay">
+    <span class="fire">🔥</span>
+    <span class="fire">🔥</span>
+    <span class="fire">🔥</span>
+    <span class="fire">🔥</span>
+    <span class="fire">🔥</span>
+    <span class="fire">🔥</span>
+    <span class="fire">🔥</span>
+    <span class="fire">🔥</span>
+    <span class="fire">🔥</span>
+    <span class="fire">🔥</span>
     <div class="overlay-text">Congratulations. Your spot is confirmed.</div>
   </div>
   <script>
     document.getElementById('phone-form').addEventListener('submit', function(e) {
       e.preventDefault(); // Prevent normal form submission
-      var overlay = document.getElementById('fire-overlay');
-      // Restart the fire explosion animation by forcing reflow
-      overlay.style.animation = 'none';
-      void overlay.offsetWidth; // Trigger reflow
-      overlay.style.animation = null;
-      // Allow pointer events (if needed) and reveal overlay
-      overlay.style.pointerEvents = 'auto';
-      // Hide the form container after the fire animation completes (3s)
+      var overlay = document.getElementById('shockwave-overlay');
+      overlay.classList.add('active');
+      // Hide the form container after the shockwave animation completes (1 second)
       setTimeout(function() {
         document.querySelector('.form-container').style.display = 'none';
-      }, 3000);
+      }, 1000);
     });
   </script>
 </body>
