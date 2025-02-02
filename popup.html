@@ -354,15 +354,22 @@
 
 /* Ensure mobile responsiveness for these elements */
 @media (max-width: 480px) {
+  /* Adjust header above the video */
   #videoHeader .header-line {
-    font-size: 1.8rem;
-    margin-bottom: 8px;
-    padding: 0 10px;
+    font-size: 1.6rem;       /* Reduced font size */
+    margin-bottom: 12px;     /* Increased margin for spacing */
+    padding: 0 15px;         /* Extra horizontal padding */
   }
+  /* Adjust footer text */
   #videoFooter .footer-line {
-    font-size: 1.2rem;
+    font-size: 1.2rem;       /* Reduced font size */
     margin-top: 15px;
-    padding: 0 10px;
+    padding: 0 15px;
+  }
+  /* Optionally, adjust the overall container */
+  #videoContainer {
+    width: 90%;
+    height: auto;
   }
 }
   </style>
