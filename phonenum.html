@@ -32,17 +32,33 @@
       padding: 20px;
       width: 400px;
       max-width: 90%;
-      text-align: center;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       position: relative;
       z-index: 1;
+      /* Use flexbox to vertically center the content */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
-    .form-container h2 {
+    .form-content {
+      width: 100%;
+    }
+    /* Header with emphasis on "ENTER" */
+    .header {
       margin-bottom: 20px;
-      font-size: 1.8em;
-      color: #333;
-      letter-spacing: 1px;
+    }
+    .header h1 {
+      font-size: 2.8em;
       text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 5px;
+      color: #ff1744;
+    }
+    .header p {
+      font-size: 1em;
+      letter-spacing: 1px;
+      margin: 0;
+      color: #333;
     }
     /* Phone Number Input Field with Animated Neon Glow */
     input[type="tel"] {
@@ -55,6 +71,7 @@
       outline: none;
       animation: neonInput 2s infinite;
       color: #fff;
+      background: transparent;
     }
     input[type="tel"]::placeholder {
       color: #aaa;
@@ -62,7 +79,7 @@
     @keyframes neonInput {
       0%, 100% {
         border-color: #fff;
-        box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 5px rgba(255,255,255,0.2);
       }
       50% {
         border-color: #ff1744;
@@ -110,7 +127,7 @@
       animation: shockwave 1.5s forwards;
     }
     /* Define angles and staggered delays for 20 fire emojis */
-    #shockwave-overlay .fire:nth-child(1)  { --angle: 0deg;    animation-delay: 0s;    }
+    #shockwave-overlay .fire:nth-child(1)  { --angle: 0deg;    animation-delay: 0s; }
     #shockwave-overlay .fire:nth-child(2)  { --angle: 18deg;   animation-delay: 0.03s; }
     #shockwave-overlay .fire:nth-child(3)  { --angle: 36deg;   animation-delay: 0.06s; }
     #shockwave-overlay .fire:nth-child(4)  { --angle: 54deg;   animation-delay: 0.09s; }
@@ -130,7 +147,6 @@
     #shockwave-overlay .fire:nth-child(18) { --angle: 306deg;  animation-delay: 0.51s; }
     #shockwave-overlay .fire:nth-child(19) { --angle: 324deg;  animation-delay: 0.54s; }
     #shockwave-overlay .fire:nth-child(20) { --angle: 342deg;  animation-delay: 0.57s; }
-    /* Enhanced Shockwave Animation */
     @keyframes shockwave {
       0% {
         transform: rotate(var(--angle)) translateX(0) scale(1);
@@ -177,11 +193,16 @@
 </head>
 <body>
   <div class="form-container">
-    <h2>Enter to Get Notified</h2>
-    <form id="phone-form" action="#" method="POST">
-      <input type="tel" name="phone" placeholder="Phone Number" required>
-      <input type="submit" value="Submit🔥">
-    </form>
+    <div class="form-content">
+      <div class="header">
+        <h1>ENTER</h1>
+        <p>to get notified</p>
+      </div>
+      <form id="phone-form" action="#" method="POST">
+        <input type="tel" name="phone" placeholder="Phone Number" required>
+        <input type="submit" value="Submit🔥">
+      </form>
+    </div>
   </div>
   <!-- Shockwave Overlay with Fire Emojis and Confirmation Text -->
   <div id="shockwave-overlay">
