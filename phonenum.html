@@ -62,17 +62,7 @@
         box-shadow: 0 0 15px rgba(255,23,68,0.8), 0 0 15px rgba(255,152,0,0.8);
       }
     }
-    /* Button wrapper for submit button and fire emoji */
-    .button-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    .fire-emoji {
-      font-size: 1.5em;
-    }
-    /* Neon animated submit button */
+    /* Neon animated submit button with fire emoji in its label */
     input[type="submit"] {
       position: relative;
       background: linear-gradient(45deg, #ff1744, #ff9800, #ff1744);
@@ -157,10 +147,7 @@
     <h2>Enter to Get Notified</h2>
     <form id="phone-form" action="#" method="POST">
       <input type="tel" name="phone" placeholder="Phone Number" required>
-      <div class="button-wrapper">
-        <input type="submit" value="Submit">
-        <span class="fire-emoji">🔥</span>
-      </div>
+      <input type="submit" value="Submit🔥">
     </form>
   </div>
   <!-- Fire overlay that covers the screen on submit -->
