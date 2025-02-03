@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neon Bio‑Tech Dashboard with DNA Logo</title>
+  <!-- Import bold font -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%; height: 100%;
+      background: #000;
+      font-family: 'Oswald', sans-serif;
+      overflow-x: hidden;
+      position: relative;
+      color: #00ff00;
+    }
+    /* Full-screen Neon Network Background (from previous examples) */
+    #networkCanvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #000;
+      z-index: 0;
+    }
+    /* Header containing the logo canvas and optional navigation */
+    header {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 20px;
+      background: rgba(0,0,0,0.7);
+      box-shadow: 0 0 10px rgba(0,255,0,0.5);
+    }
+    /* Logo Canvas styling */
+    #logoCanvas {
+      width: 150px;
+      height: 150px;
+      /* Center the canvas in the header */
+      display: block;
+      margin: 0 auto 10px;
+    }
+    /* Optional navigation below logo */
+    nav a {
+      color: #00ff00;
+      text-decoration: none;
+      margin: 0 10px;
+      font-size: 1em;
+    }
+    /* Example Dashboard Container */
+    .dashboard-container {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 40px auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .dashboard-card {
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(8px);
+      border: 2px solid rgba(0,255,0,0.3);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(0,255,0,0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .dashboard-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 25px rgba(0,255,0,0.6);
+    }
+    .dashboard-card h2 {
+      font-size: 1.6em;
+      margin-bottom: 10px;
+      color: #00ff00;
+      text-transform: uppercase;
+    }
+    .dashboard-card p.metric {
+      font-size: 2em;
+      margin: 10px 0;
+      color: #00ff00;
+    }
+  </style>
+</head>
+<body>
+  <!-- Neon Network Background (from previous examples) -->
+  <canvas id="networkCanvas"></canvas>
+  
+  <!-- Header with DNA Logo -->
+  <header>
+    <canvas id="logoCanvas" width="150" height="150"></canvas>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Products</a>
+      <a href="#">Cart</a>
+      <a href="#">Account</a>
+    </nav>
+  </header>
+  
+  <!-- Example Dashboard Container (you can replace this with your page content) -->
+  <div class="dashboard-container">
+    <div class="dashboard-card">
+      <h2>Total Users</h2>
+      <p class="metric" id="usersCount">0</p>
+    </div>
+    <div class="dashboard-card">
+      <h2>Active Sessions</h2>
+      <p class="metric" id="sessionsCount">0</p>
+    </div>
+    <div class="dashboard-card">
+      <h2>Server Load</h2>
+      <p class="metric" id="serverLoad">0%</p>
+    </div>
+    <div class="dashboard-card">
+      <h2>Revenue Today</h2>
+      <p class="metric" id="revenue">$0.00</p>
+    </div>
+  </div>
+  
+  <script>
+    /* DNA Double Helix Logo Animation */
+    const logoCanvas = document.getElementById('logoCanvas');
+    const logoCtx = logoCanvas.getContext('2d');
+    const logoWidth = logoCanvas.width;
+    const logoHeight = logoCanvas.height;
+    const centerY = logoHeight / 2;
+    let logoAngle = 0;
+    
+    function drawLogo() {
+      logoCtx.clearRect(0, 0, logoWidth, logoHeight);
+      logoCtx.lineWidth = 3;
+      logoCtx.strokeStyle = "#00ffff";
+      logoCtx.shadowColor = "#00ffff";
+      logoCtx.shadowBlur = 8;
+      
+      // Draw first strand: sine wave
+      logoCtx.beginPath();
+      for (let x = 0; x <= logoWidth; x += 2) {
+        const t = (x / logoWidth) * 2 * Math.PI * 3; // 3 full periods
+        const y = centerY + 20 * Math.sin(t + logoAngle);
+        if (x === 0) logoCtx.moveTo(x, y);
+        else logoCtx.lineTo(x, y);
+      }
+      logoCtx.stroke();
+      
+      // Draw second strand: sine wave offset by PI (inverted)
+      logoCtx.beginPath();
+      for (let x = 0; x <= logoWidth; x += 2) {
+        const t = (x / logoWidth) * 2 * Math.PI * 3; // 3 full periods
+        const y = centerY + 20 * Math.sin(t + logoAngle + Math.PI);
+        if (x === 0) logoCtx.moveTo(x, y);
+        else logoCtx.lineTo(x, y);
+      }
+      logoCtx.stroke();
+      
+      // Optional: Draw connecting lines to mimic a ladder (every 10 pixels)
+      for (let x = 0; x <= logoWidth; x += 10) {
+        const t1 = (x / logoWidth) * 2 * Math.PI * 3;
+        const y1 = centerY + 20 * Math.sin(t1 + logoAngle);
+        const y2 = centerY + 20 * Math.sin(t1 + logoAngle + Math.PI);
+        logoCtx.beginPath();
+        logoCtx.moveTo(x, y1);
+        logoCtx.lineTo(x, y2);
+        logoCtx.stroke();
+      }
+      
+      logoAngle += 0.05; // Rotate slowly
+      requestAnimationFrame(drawLogo);
+    }
+    drawLogo();
+    
+    /* Neon Network Background Animation (from previous example) */
+    const networkCanvas = document.getElementById('networkCanvas');
+    const ctx = networkCanvas.getContext('2d');
+    networkCanvas.width = window.innerWidth;
+    networkCanvas.height = window.innerHeight;
+    
+    const nodeCount = 100;
+    const nodes = [];
+    const maxDistance = 150;
+    
+    class Node {
+      constructor() {
+        this.x = Math.random() * networkCanvas.width;
+        this.y = Math.random() * networkCanvas.height;
+        this.vx = (Math.random() - 0.5) * 1.5;
+        this.vy = (Math.random() - 0.5) * 1.5;
+        this.radius = Math.random() * 2 + 1;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > networkCanvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > networkCanvas.height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = "#00ff00";
+        ctx.fill();
+      }
+    }
+    
+    for (let i = 0; i < nodeCount; i++) {
+      nodes.push(new Node());
+    }
+    
+    function drawNetwork() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      ctx.fillRect(0, 0, networkCanvas.width, networkCanvas.height);
+      
+      for (let i = 0; i < nodeCount; i++) {
+        for (let j = i + 1; j < nodeCount; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < maxDistance) {
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.strokeStyle = `rgba(0,255,0,${1 - dist / maxDistance})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
+      
+      nodes.forEach(node => {
+        node.update();
+        node.draw();
+      });
+      
+      requestAnimationFrame(drawNetwork);
+    }
+    drawNetwork();
+    
+    window.addEventListener('resize', () => {
+      networkCanvas.width = window.innerWidth;
+      networkCanvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
