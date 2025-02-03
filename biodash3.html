@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neon Bio-Tech Dashboard</title>
+  <!-- Import bold font for a modern look -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      font-family: 'Oswald', sans-serif;
+      overflow-x: hidden;
+      position: relative;
+      color: #00ffff;
+    }
+    /* Full-Screen Canvas for Neon Network Background */
+    #networkCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      background: #000;
+    }
+    /* Header with Neon Glow */
+    header {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      box-shadow: 0 0 15px rgba(0,255,255,0.7);
+    }
+    header h1 {
+      font-size: 2.8em;
+      letter-spacing: 2px;
+      color: #00ffff;
+      text-transform: uppercase;
+    }
+    /* Dashboard Container */
+    .dashboard-container {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 20px auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 0 20px;
+    }
+    /* Glassmorphic Dashboard Cards */
+    .dashboard-card {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(0,255,255,0.3);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0,255,255,0.5);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .dashboard-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 30px rgba(0,255,255,0.7);
+    }
+    .dashboard-card h2 {
+      font-size: 1.6em;
+      margin-bottom: 10px;
+      color: #00ffff;
+      text-transform: uppercase;
+    }
+    .dashboard-card p.metric {
+      font-size: 2em;
+      margin: 10px 0;
+      color: #00ffff;
+    }
+    /* Button Container and Neon Button Styles */
+    .dashboard-card .action-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 15px;
+    }
+    .dashboard-card .action-buttons button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.3s ease;
+    }
+    .dashboard-card .action-buttons button.add {
+      background: linear-gradient(45deg, #00ffff, #00e6e6);
+      color: #000;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    .dashboard-card .action-buttons button.add:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #00e6e6, #00cccc);
+    }
+    .dashboard-card .action-buttons button.reset {
+      background: linear-gradient(45deg, #ffffff, #e6e6e6);
+      color: #000;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    .dashboard-card .action-buttons button.reset:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #e6e6e6, #cccccc);
+    }
+  </style>
+</head>
+<body>
+  <!-- Neon Network Background Canvas -->
+  <canvas id="networkCanvas"></canvas>
+  
+  <!-- Header -->
+  <header>
+    <h1>Neon Bio-Tech Dashboard</h1>
+  </header>
+  
+  <!-- Dashboard Container with Cards -->
+  <div class="dashboard-container">
+    <!-- Card 1: Total Users -->
+    <div class="dashboard-card">
+      <h2>Total Users</h2>
+      <p class="metric" id="usersCount">0</p>
+      <div class="action-buttons">
+        <button class="add" onclick="increment('usersCount')">+ User</button>
+        <button class="reset" onclick="resetCount('usersCount')">Reset</button>
+      </div>
+    </div>
+    <!-- Card 2: Active Sessions -->
+    <div class="dashboard-card">
+      <h2>Active Sessions</h2>
+      <p class="metric" id="sessionsCount">0</p>
+      <div class="action-buttons">
+        <button class="add" onclick="increment('sessionsCount')">+ Session</button>
+        <button class="reset" onclick="resetCount('sessionsCount')">Reset</button>
+      </div>
+    </div>
+    <!-- Card 3: Server Load -->
+    <div class="dashboard-card">
+      <h2>Server Load</h2>
+      <p class="metric" id="serverLoad">0%</p>
+      <div class="action-buttons">
+        <button class="add" onclick="simulateLoad()">Simulate Load</button>
+      </div>
+    </div>
+    <!-- Card 4: Revenue Today -->
+    <div class="dashboard-card">
+      <h2>Revenue Today</h2>
+      <p class="metric" id="revenue">$0.00</p>
+      <div class="action-buttons">
+        <button class="add" onclick="addRevenue()">+ Sale</button>
+        <button class="reset" onclick="resetRevenue()">Reset</button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Neon Bio-Tech Background Animation using Canvas
+    const canvas = document.getElementById('networkCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    // Create an array of nodes for the network
+    const nodeCount = 100;
+    const nodes = [];
+    const maxDistance = 150;
+    
+    class Node {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 1.5;
+        this.vy = (Math.random() - 0.5) * 1.5;
+        this.radius = Math.random() * 2 + 1;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        // Bounce off the edges
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = "#00ffff";
+        ctx.fill();
+      }
+    }
+    
+    for (let i = 0; i < nodeCount; i++) {
+      nodes.push(new Node());
+    }
+    
+    function drawNetwork() {
+      // Create a fading trail effect
+      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw connection lines between nodes that are close enough
+      for (let i = 0; i < nodeCount; i++) {
+        for (let j = i + 1; j < nodeCount; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < maxDistance) {
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.strokeStyle = `rgba(0,255,255,${1 - dist / maxDistance})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
+      
+      nodes.forEach(node => {
+        node.update();
+        node.draw();
+      });
+      
+      requestAnimationFrame(drawNetwork);
+    }
+    drawNetwork();
+    
+    // Adjust canvas on window resize
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+    
+    // Dashboard Functions
+    function increment(id) {
+      const el = document.getElementById(id);
+      let value = parseInt(el.textContent.replace('%','').replace('$',''));
+      value++;
+      // Format value based on element id
+      if(id === 'serverLoad') {
+        el.textContent = value + '%';
+      } else if(id === 'revenue') {
+        el.textContent = '$' + value.toFixed(2);
+      } else {
+        el.textContent = value;
+      }
+    }
+    function resetCount(id) {
+      const el = document.getElementById(id);
+      if(id === 'serverLoad') {
+        el.textContent = '0%';
+      } else if(id === 'revenue') {
+        el.textContent = '$0.00';
+      } else {
+        el.textContent = '0';
+      }
+    }
+    function simulateLoad() {
+      const el = document.getElementById('serverLoad');
+      let load = Math.floor(Math.random() * 100);
+      el.textContent = load + '%';
+    }
+    function addRevenue() {
+      const el = document.getElementById('revenue');
+      let current = parseFloat(el.textContent.replace('$',''));
+      let sale = (Math.random() * 100);
+      current += sale;
+      el.textContent = '$' + current.toFixed(2);
+    }
+    function resetRevenue() {
+      document.getElementById('revenue').textContent = '$0.00';
+    }
+  </script>
+</body>
+</html>
