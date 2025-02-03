@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neon Bio Dashboard</title>
+  <style>
+    /* ====================================
+       Global Styles & Resets
+    ==================================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      font-family: 'Arial', sans-serif;
+      overflow: hidden;
+      color: #fff;
+    }
+    /* ====================================
+       Full-Screen Animated Background
+    ==================================== */
+    #bgCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    /* ====================================
+       Dashboard Container & Layout
+    ==================================== */
+    .dashboard {
+      position: relative;
+      padding: 20px;
+      z-index: 1;
+      overflow-y: auto;
+      height: 100vh;
+    }
+    /* Cards container styling */
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    /* ====================================
+       Glassmorphic Dashboard Cards
+    ==================================== */
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid #39FF14;
+      border-radius: 15px;
+      padding: 20px;
+      width: 200px;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(57, 255, 20, 0.5);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(57, 255, 20, 0.8);
+    }
+    .card h2 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      text-shadow: 0 0 5px #39FF14;
+    }
+    .metric-value {
+      font-size: 2rem;
+      font-weight: bold;
+      text-shadow: 0 0 10px #39FF14;
+    }
+    /* ====================================
+       Graph Section Styling
+    ==================================== */
+    .graph-container {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid #39FF14;
+      border-radius: 15px;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      box-shadow: 0 0 15px rgba(57, 255, 20, 0.5);
+    }
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .cards {
+        flex-direction: column;
+        align-items: center;
+      }
+      .card {
+        width: 80%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Full‑screen canvas for animated background -->
+  <canvas id="bgCanvas"></canvas>
+
+  <!-- Dashboard Content -->
+  <div class="dashboard">
+    <!-- Metrics Cards -->
+    <div class="cards">
+      <div class="card" id="card-users">
+        <h2>Total Users</h2>
+        <p class="metric-value" id="users-value">0</p>
+      </div>
+      <div class="card" id="card-sessions">
+        <h2>Active Sessions</h2>
+        <p class="metric-value" id="sessions-value">0</p>
+      </div>
+      <div class="card" id="card-load">
+        <h2>Server Load</h2>
+        <p class="metric-value" id="load-value">0%</p>
+      </div>
+      <div class="card" id="card-revenue">
+        <h2>Revenue Today</h2>
+        <p class="metric-value" id="revenue-value">$0.00</p>
+      </div>
+    </div>
+    <!-- Animated Graph Section -->
+    <div class="graph-container">
+      <canvas id="lineChart"></canvas>
+    </div>
+  </div>
+
+  <!-- ====================================
+       JavaScript Section
+       - Chart.js for the animated graph.
+       - Custom scripts for dynamic updates and background animation.
+  ==================================== -->
+  <!-- Include Chart.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    /* ====================================
+       Neon Digital Rain Background Animation
+    ==================================== */
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Set canvas size to window dimensions
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Adjust canvas size on window resize
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      columns = canvas.width / fontSize;
+      drops = Array.from({ length: Math.floor(columns) }, () => Math.random() * canvas.height);
+    });
+
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    // Create an array of drops – one per column
+    let drops = Array.from({ length: Math.floor(columns) }, () => Math.random() * canvas.height);
+
+    // Draw the digital rain
+    function draw() {
+      // Translucent background to create trail effect
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Set the neon green color and font style
+      ctx.fillStyle = "#39FF14";
+      ctx.font = fontSize + "px monospace";
+
+      // Loop over drops
+      for (let i = 0; i < drops.length; i++) {
+        // Generate a random character (using Unicode Katakana range)
+        const text = String.fromCharCode(0x30A0 + Math.floor(Math.random() * 96));
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+        ctx.fillText(text, x, y);
+
+        // Reset drop to top with a random chance once it goes beyond the screen
+        if (y > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        // Increment Y coordinate for drop
+        drops[i]++;
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+
+    /* ====================================
+       Live-Updating Neon Line Chart (Graph)
+       Using Chart.js to simulate real-time data updates.
+    ==================================== */
+    const ctxChart = document.getElementById('lineChart').getContext('2d');
+
+    // Initial chart data setup
+    const chartData = {
+      labels: [],
+      datasets: [{
+        label: 'Live Data',
+        data: [],
+        borderColor: '#39FF14',
+        backgroundColor: 'rgba(57, 255, 20, 0.1)',
+        pointBackgroundColor: '#39FF14',
+        tension: 0.4, // Smooth curves
+      }]
+    };
+
+    // Create the line chart
+    const lineChart = new Chart(ctxChart, {
+      type: 'line',
+      data: chartData,
+      options: {
+        animation: {
+          duration: 500,
+        },
+        scales: {
+          x: {
+            display: true,
+            ticks: { color: "#39FF14" },
+            grid: { color: 'rgba(57, 255, 20, 0.1)' }
+          },
+          y: {
+            display: true,
+            ticks: { color: "#39FF14" },
+            grid: { color: 'rgba(57, 255, 20, 0.1)' }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              color: "#39FF14"
+            }
+          }
+        }
+      }
+    });
+
+    // Function to add a new data point every second
+    setInterval(() => {
+      const now = new Date();
+      const timeLabel = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+
+      // Limit the number of data points shown
+      if (chartData.labels.length > 20) {
+        chartData.labels.shift();
+        chartData.datasets[0].data.shift();
+      }
+      chartData.labels.push(timeLabel);
+      // Simulate new data (random value between 10 and 100)
+      const newValue = Math.floor(Math.random() * 90) + 10;
+      chartData.datasets[0].data.push(newValue);
+      lineChart.update();
+    }, 1000);
+
+    /* ====================================
+       Dynamic Dashboard Metrics Update
+       Randomly update card values every 5 seconds
+    ==================================== */
+    function updateMetrics() {
+      document.getElementById('users-value').textContent = Math.floor(Math.random() * 10000);
+      document.getElementById('sessions-value').textContent = Math.floor(Math.random() * 5000);
+      document.getElementById('load-value').textContent = Math.floor(Math.random() * 100) + '%';
+      document.getElementById('revenue-value').textContent = '$' + (Math.random() * 10000).toFixed(2);
+    }
+    // Update metrics every 5 seconds
+    setInterval(updateMetrics, 5000);
+    updateMetrics();
+  </script>
+</body>
+</html>
