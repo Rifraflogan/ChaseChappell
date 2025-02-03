@@ -3,132 +3,161 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cheer Up Michael!</title>
-  <!-- Import a fun, bold font -->
+  <title>Ocean Neon Rain for Michael</title>
+  <!-- Import a bold, modern font -->
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
   <style>
-    /* Global reset */
+    /* Global Reset */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
     html, body {
+      width: 100%;
       height: 100%;
       overflow: hidden;
     }
-    /* Neon blue ocean background with animated gradient */
     body {
+      background: #000;
       font-family: 'Oswald', sans-serif;
-      background: linear-gradient(135deg, #0b3d91, #1e90ff);
-      background-size: 200% 200%;
-      animation: bgAnimation 10s ease infinite;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: relative;
     }
-    @keyframes bgAnimation {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    /* Centered card with an ocean vibe */
-    .card {
-      background: rgba(255,255,255,0.95);
-      border: 3px solid #1e90ff;
-      border-radius: 15px;
-      padding: 30px;
-      text-align: center;
-      max-width: 400px;
-      width: 90%;
-      box-shadow: 0 4px 20px rgba(30,144,255,0.5);
-      z-index: 1;
-    }
-    .card h1 {
-      font-size: 2em;
-      color: #0b3d91;
-      margin-bottom: 10px;
-    }
-    .card p {
-      font-size: 1.2em;
-      color: #333;
-      margin-bottom: 20px;
-    }
-    .card input[type="text"] {
-      width: 100%;
-      padding: 12px;
-      border: 2px solid #1e90ff;
-      border-radius: 10px;
-      font-size: 1em;
-      margin-bottom: 20px;
-      outline: none;
-    }
-    .card input[type="submit"] {
-      width: 100%;
-      padding: 12px;
-      background: #1e90ff;
-      border: none;
-      border-radius: 10px;
-      font-size: 1em;
-      color: white;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .card input[type="submit"]:hover {
-      background: #0b3d91;
-    }
-    /* Full-screen overlay that appears after submission */
-    #overlay {
+    /* Full-screen Canvas Background */
+    #backgroundCanvas {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.95);
-      display: none;
-      z-index: 10;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      z-index: 0;
     }
-    #overlay .message {
-      font-size: 3em;
-      color: #1e90ff;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-      opacity: 0;
-      animation: fadeIn 1s forwards;
-      animation-delay: 0.5s;
+    /* Centered Card with Opaque Background and Neon Blue Glow */
+    .card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.8);
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      z-index: 1;
+      border: 2px solid #00bfff;
+      box-shadow: 0 0 20px rgba(0,191,255,0.8);
     }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    .card h1 {
+      font-size: 2.5em;
+      color: #00bfff;
+      margin-bottom: 20px;
+    }
+    .card p {
+      font-size: 1.2em;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+    .card button {
+      padding: 12px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 10px;
+      background: #00bfff;
+      color: #000;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .card button:hover {
+      background: #009acd;
     }
   </style>
 </head>
 <body>
-  <!-- Entry Card -->
-  <div class="card" id="entry-card">
-    <h1>Ocean Vibes for Michael</h1>
-    <p>Enter a message to ride the waves of positivity!</p>
-    <form id="entryForm">
-      <input type="text" placeholder="Type your message..." required>
-      <input type="submit" value="Submit">
-    </form>
+  <!-- Canvas for Neon Water Droplet Rain -->
+  <canvas id="backgroundCanvas"></canvas>
+  
+  <!-- Centered Card -->
+  <div class="card">
+    <h1>Cheer Up Michael!</h1>
+    <p>Let the ocean waves wash your worries away.</p>
+    <button id="vibesButton">Get Ocean Vibes</button>
   </div>
-  <!-- Overlay for "Cheer up Michael!" -->
-  <div id="overlay">
-    <div class="message">Cheer up Michael!</div>
-  </div>
+  
   <script>
-    // On form submission, hide the card and display the overlay.
-    document.getElementById('entryForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      document.getElementById('entry-card').style.display = 'none';
-      setTimeout(function() {
-        document.getElementById('overlay').style.display = 'flex';
-      }, 300);
+    // Set up the canvas and context
+    const canvas = document.getElementById('backgroundCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    // Define a Droplet class for our water droplets
+    class Droplet {
+      constructor(x, y, radius, speed) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.speed = speed;
+      }
+      update() {
+        this.y += this.speed;
+        if (this.y - this.radius > canvas.height) {
+          this.y = -this.radius;
+          this.x = Math.random() * canvas.width;
+        }
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#00bfff';
+        // Create a neon glow effect
+        ctx.shadowColor = 'rgba(0,191,255,0.8)';
+        ctx.shadowBlur = 10;
+        ctx.fill();
+        ctx.closePath();
+      }
+    }
+    
+    // Create an array of droplets; number based on canvas width
+    const droplets = [];
+    const dropletCount = Math.floor(canvas.width / 10);
+    for (let i = 0; i < dropletCount; i++) {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height;
+      const radius = Math.random() * 2 + 1;  // radius between 1 and 3
+      const speed = Math.random() * 2 + 1;   // speed between 1 and 3
+      droplets.push(new Droplet(x, y, radius, speed));
+    }
+    
+    // Animate the droplets with an ocean gradient background
+    function animate() {
+      // Create an ocean-inspired gradient background
+      const grd = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      grd.addColorStop(0, "#001f3f");
+      grd.addColorStop(1, "#000");
+      ctx.fillStyle = grd;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Update and draw each droplet
+      droplets.forEach(droplet => {
+        droplet.update();
+        droplet.draw();
+      });
+      
+      requestAnimationFrame(animate);
+    }
+    animate();
+    
+    // Resize canvas on window resize
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+    
+    // Optional: When the button is clicked, display a fun message
+    document.getElementById('vibesButton').addEventListener('click', () => {
+      // For example, you could display a temporary message or even trigger another animation.
+      alert("Michael, let the ocean vibes fill you with joy!");
     });
   </script>
 </body>
