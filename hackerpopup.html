@@ -13,11 +13,14 @@
       padding: 0;
       box-sizing: border-box;
     }
-    /* Ensure full height and hide overflow */
+    /* Full-height and centered body using flexbox */
     html, body {
       height: 100%;
       overflow: hidden;
       background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     /* Matrix rain canvas positioned behind everything */
     #matrix {
@@ -38,7 +41,6 @@
       padding: 20px;
       width: 400px;
       max-width: 90%;
-      margin: 0 auto;
       text-align: center;
       color: #0F0;
       font-family: 'Oswald', sans-serif;
@@ -96,7 +98,7 @@
   <!-- Matrix rain background canvas -->
   <canvas id="matrix"></canvas>
   
-  <!-- Popup card for anonymous entry -->
+  <!-- Centered popup card for anonymous entry -->
   <div class="form-container">
     <h1>Anonymous Entry</h1>
     <p>Scan to Access</p>
@@ -120,7 +122,6 @@
     const drops = Array(Math.floor(columns)).fill(1);
     
     function drawMatrix() {
-      // Faintly clear the canvas with a black overlay to create the trail effect
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = "#0F0"; // Green text for the rain
@@ -128,7 +129,6 @@
       for (let i = 0; i < drops.length; i++) {
         const text = lettersArray[Math.floor(Math.random() * lettersArray.length)];
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-        // Reset drop randomly after it reaches the bottom
         if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
           drops[i] = 0;
         }
