@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Futuristic Bio-Tech Access</title>
+  <!-- Import a modern, bold font -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      font-family: 'Oswald', sans-serif;
+      overflow: hidden;
+      position: relative;
+      color: #00ff00;
+    }
+    /* Canvas for Bio-Tech Background */
+    #bioCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+    /* Centered Glassmorphic Card */
+    .card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 400px;
+      padding: 30px;
+      border-radius: 15px;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(0,255,0,0.3);
+      box-shadow: 0 0 20px rgba(0,255,0,0.5);
+      text-align: center;
+      z-index: 1;
+    }
+    .card h1 {
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .card p {
+      font-size: 1em;
+      margin-bottom: 20px;
+      color: #ccc;
+    }
+    .card input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 1em;
+      border: 2px solid rgba(0,255,0,0.5);
+      border-radius: 8px;
+      background: transparent;
+      color: #00ff00;
+      margin-bottom: 20px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    .card input[type="password"]:focus {
+      border-color: #00ff00;
+    }
+    .card input[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      background: #00ff00;
+      color: #000;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: background 0.3s ease;
+    }
+    .card input[type="submit"]:hover {
+      background: #00e600;
+    }
+    /* Holographic Layers on the Card */
+    .card::before, .card::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border-radius: inherit;
+      z-index: -1;
+      animation: holoPulse 4s infinite;
+    }
+    .card::before {
+      background: linear-gradient(45deg, rgba(0,255,0,0.2), transparent);
+      opacity: 0.6;
+    }
+    .card::after {
+      background: linear-gradient(135deg, rgba(0,255,0,0.2), transparent);
+      opacity: 0.4;
+      animation-direction: reverse;
+    }
+    @keyframes holoPulse {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(5px, -5px) scale(1.05); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+    /* Access Overlay */
+    #access-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: none;
+      z-index: 2;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #access-overlay h2 {
+      font-size: 3em;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+      opacity: 0;
+      animation: fadeIn 1s forwards;
+      animation-delay: 0.5s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Bio-Tech Background Canvas -->
+  <canvas id="bioCanvas"></canvas>
+  
+  <!-- Password Entry Card -->
+  <div class="card" id="entryCard">
+    <h1>Bio-Tech Access</h1>
+    <p>Enter password to connect with the neural network.</p>
+    <form id="accessForm">
+      <input type="password" placeholder="Password" required>
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+  
+  <!-- Access Overlay -->
+  <div id="access-overlay">
+    <h2>Access Granted</h2>
+  </div>
+  
+  <script>
+    // Set up the bio-tech background with canvas
+    const canvas = document.getElementById('bioCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    // Create an array of nodes for the neural network effect
+    const nodeCount = 80;
+    const nodes = [];
+    const maxDistance = 120;
+    
+    class Node {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 1.2;
+        this.vy = (Math.random() - 0.5) * 1.2;
+        this.radius = Math.random() * 2 + 1;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = "#00ff00";
+        ctx.fill();
+      }
+    }
+    
+    for (let i = 0; i < nodeCount; i++) {
+      nodes.push(new Node());
+    }
+    
+    function drawNetwork() {
+      // Draw a semi-transparent black background for trails
+      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw connection lines between nodes that are close enough
+      for (let i = 0; i < nodeCount; i++) {
+        for (let j = i + 1; j < nodeCount; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < maxDistance) {
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.strokeStyle = `rgba(0,255,0,${1 - dist / maxDistance})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
+      
+      // Update and draw each node
+      nodes.forEach(node => {
+        node.update();
+        node.draw();
+      });
+      
+      requestAnimationFrame(drawNetwork);
+    }
+    drawNetwork();
+    
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+    
+    // Form submission: hide card and display access overlay
+    document.getElementById('accessForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      document.getElementById('entryCard').style.display = 'none';
+      document.getElementById('access-overlay').style.display = 'flex';
+    });
+  </script>
+</body>
+</html>
