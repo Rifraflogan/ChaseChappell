@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Radio DJ Audio Transformer</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    #upload-area {
+      border: 2px dashed #ccc; padding: 20px; text-align: center; margin-bottom: 20px;
+    }
+    #controls { margin-bottom: 20px; }
+    #advanced-settings { margin-top: 20px; }
+    #progress { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Radio DJ Audio Transformer</h1>
+  <div id="upload-area">
+    <input type="file" id="audio-upload" accept="audio/*" />
+    <p>Drag and drop your audio file here or click to select.</p>
+  </div>
+  <div id="controls">
+    <button id="preview-button">Preview</button>
+    <button id="process-button">Process &amp; Download</button>
+  </div>
+  <div id="advanced-settings" style="display:none;">
+    <!-- Advanced settings can be added here -->
+    <p>Advanced settings (coming soon!)</p>
+  </div>
+  <div id="progress">
+    <p id="status">Awaiting file upload...</p>
+  </div>
+
+  <script>
+    // Create AudioContext and declare global variables
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let mediaRecorder, recordedChunks = [];
+    let originalBuffer = null;
+
+    // Handle file upload
+    document.getElementById('audio-upload').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const arrayBuffer = e.target.result;
+          audioCtx.decodeAudioData(arrayBuffer, function(audioBuffer) {
+            originalBuffer = audioBuffer;
+            setupAudioGraph(audioBuffer);
+          });
+        };
+        reader.readAsArrayBuffer(file);
+      }
+    });
+
+    // Setup the processing chain for initial load (used for setting up the recording destination)
+    function setupAudioGraph(audioBuffer) {
+      // Create a source node from the audio buffer
+      const sourceNode = audioCtx.createBufferSource();
+      sourceNode.buffer = audioBuffer;
+
+      // ---- Equalization (EQ) ----
+      const eqNode = audioCtx.createBiquadFilter();
+      eqNode.type = 'peaking';
+      eqNode.frequency.value = 1000; // Emphasize mid frequencies
+      eqNode.gain.value = 6;         // Boost by 6 dB
+      eqNode.Q.value = 1;
+
+      // ---- Compression ----
+      const compressorNode = audioCtx.createDynamicsCompressor();
+      compressorNode.threshold.value = -20;  // in dB
+      compressorNode.ratio.value = 4;
+      compressorNode.attack.value = 0.003;
+      compressorNode.release.value = 0.25;
+
+      // ---- Reverb/Delay ----
+      // Using a DelayNode for a subtle delay effect; alternatively, a ConvolverNode can be used for reverb.
+      const delayNode = audioCtx.createDelay();
+      delayNode.delayTime.value = 0.15; // 150 ms delay
+
+      // ---- Optional Pitch/Timbre Modulation ----
+      // For slight pitch modulation, you might adjust playbackRate (commented out for now)
+      // sourceNode.playbackRate.value = 1.02;
+
+      // ---- Routing ----
+      // Chain: source -> EQ -> Compressor -> Delay -> Destination & Recording
+      sourceNode.connect(eqNode);
+      eqNode.connect(compressorNode);
+      compressorNode.connect(delayNode);
+      delayNode.connect(audioCtx.destination);
+
+      // Create a MediaStreamDestination for recording the processed audio
+      const dest = audioCtx.createMediaStreamDestination();
+      delayNode.connect(dest);
+
+      // Setup MediaRecorder with the stream from the destination
+      setupMediaRecorder(dest.stream);
+
+      document.getElementById('status').innerText = 'Audio loaded. Ready to preview or process.';
+    }
+
+    // Preview button: Plays the processed audio in real-time
+    document.getElementById('preview-button').addEventListener('click', () => {
+      if (originalBuffer) {
+        // Each playback requires a new BufferSource since a source can only be started once.
+        const previewSource = audioCtx.createBufferSource();
+        previewSource.buffer = originalBuffer;
+
+        // Re-create the processing chain for preview
+        const previewEQ = audioCtx.createBiquadFilter();
+        previewEQ.type = 'peaking';
+        previewEQ.frequency.value = 1000;
+        previewEQ.gain.value = 6;
+        previewEQ.Q.value = 1;
+
+        const previewCompressor = audioCtx.createDynamicsCompressor();
+        previewCompressor.threshold.value = -20;
+        previewCompressor.ratio.value = 4;
+        previewCompressor.attack.value = 0.003;
+        previewCompressor.release.value = 0.25;
+
+        const previewDelay = audioCtx.createDelay();
+        previewDelay.delayTime.value = 0.15;
+
+        previewSource.connect(previewEQ);
+        previewEQ.connect(previewCompressor);
+        previewCompressor.connect(previewDelay);
+        previewDelay.connect(audioCtx.destination);
+
+        previewSource.start(0);
+      }
+    });
+
+    // Process & Download button: Records the processed audio and provides a download link
+    document.getElementById('process-button').addEventListener('click', () => {
+      if (originalBuffer) {
+        recordedChunks = []; // Clear previous recordings
+
+        // Create a new source for processing and recording
+        const processingSource = audioCtx.createBufferSource();
+        processingSource.buffer = originalBuffer;
+
+        // Re-create the processing chain for processing
+        const procEQ = audioCtx.createBiquadFilter();
+        procEQ.type = 'peaking';
+        procEQ.frequency.value = 1000;
+        procEQ.gain.value = 6;
+        procEQ.Q.value = 1;
+
+        const procCompressor = audioCtx.createDynamicsCompressor();
+        procCompressor.threshold.value = -20;
+        procCompressor.ratio.value = 4;
+        procCompressor.attack.value = 0.003;
+        procCompressor.release.value = 0.25;
+
+        const procDelay = audioCtx.createDelay();
+        procDelay.delayTime.value = 0.15;
+
+        processingSource.connect(procEQ);
+        procEQ.connect(procCompressor);
+        procCompressor.connect(procDelay);
+        procDelay.connect(audioCtx.destination);
+
+        // For recording, use a separate MediaStreamDestination
+        const procDest = audioCtx.createMediaStreamDestination();
+        procDelay.connect(procDest);
+
+        // Setup MediaRecorder with the new stream
+        setupMediaRecorder(procDest.stream);
+
+        processingSource.start();
+
+        // Stop recording after the duration of the audio buffer
+        setTimeout(() => {
+          if (mediaRecorder.state !== "inactive") {
+            mediaRecorder.stop();
+          }
+        }, processingSource.buffer.duration * 1000);
+      }
+    });
+
+    // Setup MediaRecorder to capture audio from a MediaStreamDestination
+    function setupMediaRecorder(stream) {
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = function(e) {
+        if (e.data.size > 0) {
+          recordedChunks.push(e.data);
+        }
+      };
+
+      mediaRecorder.onstop = function() {
+        const blob = new Blob(recordedChunks, { type: 'audio/webm' });
+        const url = URL.createObjectURL(blob);
+        // Remove any existing download link
+        const existingLink = document.getElementById('download-link');
+        if (existingLink) { existingLink.remove(); }
+        // Create a new download link
+        const downloadLink = document.createElement('a');
+        downloadLink.id = 'download-link';
+        downloadLink.href = url;
+        downloadLink.download = 'radio-dj-effect.webm';
+        downloadLink.innerText = 'Download Processed Audio';
+        document.getElementById('progress').appendChild(downloadLink);
+        document.getElementById('status').innerText = 'Processing complete.';
+      };
+    }
+  </script>
+</body>
+</html>
