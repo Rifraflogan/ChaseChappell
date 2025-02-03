@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neon Helix Dashboard</title>
+  <!-- Import a bold modern font -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      font-family: 'Oswald', sans-serif;
+      color: #00ffff;
+      overflow-x: hidden;
+      position: relative;
+    }
+    /* Neon Helix Background Canvas */
+    #helixCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      background: #000;
+      display: block;
+    }
+    /* Header */
+    header {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 20px;
+      background: rgba(0,0,0,0.7);
+      box-shadow: 0 0 10px rgba(0,255,255,0.5);
+    }
+    header h1 {
+      font-size: 2.5em;
+      letter-spacing: 2px;
+      color: #00ffff;
+    }
+    /* Dashboard Container */
+    .dashboard-container {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 20px auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    /* Dashboard Card */
+    .dashboard-card {
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      border: 2px solid rgba(0,255,255,0.3);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(0,255,255,0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .dashboard-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 25px rgba(0,255,255,0.6);
+    }
+    .dashboard-card h2 {
+      font-size: 1.5em;
+      margin-bottom: 10px;
+      color: #00ffff;
+    }
+    .dashboard-card p {
+      font-size: 2em;
+      margin: 10px 0;
+      color: #00ffff;
+    }
+    .dashboard-card .action-buttons {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .dashboard-card .action-buttons button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.3s ease;
+    }
+    .dashboard-card .action-buttons button.add-cart {
+      background: linear-gradient(45deg, #00ffff, #00e6e6);
+      color: #000;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    .dashboard-card .action-buttons button.add-cart:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #00e6e6, #00cccc);
+    }
+    .dashboard-card .action-buttons button.buy-now {
+      background: linear-gradient(45deg, #ffffff, #e6e6e6);
+      color: #000;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    .dashboard-card .action-buttons button.buy-now:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #e6e6e6, #cccccc);
+    }
+  </style>
+</head>
+<body>
+  <!-- Neon Helix Background Canvas -->
+  <canvas id="helixCanvas"></canvas>
+  
+  <!-- Header -->
+  <header>
+    <h1>Neon Helix Dashboard</h1>
+  </header>
+  
+  <!-- Dashboard Container -->
+  <div class="dashboard-container">
+    <!-- Dashboard Card 1: Total Users -->
+    <div class="dashboard-card">
+      <h2>Total Users</h2>
+      <p id="usersCount">0</p>
+      <div class="action-buttons">
+        <button class="add-cart" onclick="increment('usersCount')">+ User</button>
+        <button class="buy-now" onclick="resetCount('usersCount')">Reset</button>
+      </div>
+    </div>
+    <!-- Dashboard Card 2: Active Sessions -->
+    <div class="dashboard-card">
+      <h2>Active Sessions</h2>
+      <p id="sessionsCount">0</p>
+      <div class="action-buttons">
+        <button class="add-cart" onclick="increment('sessionsCount')">+ Session</button>
+        <button class="buy-now" onclick="resetCount('sessionsCount')">Reset</button>
+      </div>
+    </div>
+    <!-- Dashboard Card 3: Server Load -->
+    <div class="dashboard-card">
+      <h2>Server Load</h2>
+      <p id="serverLoad">0%</p>
+      <div class="action-buttons">
+        <button class="add-cart" onclick="simulateLoad()">Simulate Load</button>
+      </div>
+    </div>
+    <!-- Dashboard Card 4: Revenue Today -->
+    <div class="dashboard-card">
+      <h2>Revenue Today</h2>
+      <p id="revenue">$0.00</p>
+      <div class="action-buttons">
+        <button class="add-cart" onclick="addRevenue()">+ Sale</button>
+        <button class="buy-now" onclick="resetRevenue()">Reset</button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Neon Helix Background Animation
+    const canvas = document.getElementById('helixCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    let time = 0;
+    function drawHelix() {
+      // Create a trailing effect by drawing a semi-transparent black rectangle
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const baseRadius = Math.min(canvas.width, canvas.height) / 4;
+      
+      // Draw a series of points along a helix curve
+      for (let i = 0; i < 360; i += 5) {
+        let angle = (i + time) * Math.PI / 180;
+        // Use sine and cosine functions to create a helix-like distortion
+        let offset = 0.3 * Math.sin(3 * angle);
+        let radius = baseRadius * (1 + offset);
+        let x = centerX + radius * Math.cos(angle);
+        let y = centerY + radius * Math.sin(angle);
+        
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = '#00ffff';
+        ctx.shadowColor = '#00ffff';
+        ctx.shadowBlur = 10;
+        ctx.fill();
+      }
+      
+      time += 1; // Increase time for rotation
+      requestAnimationFrame(drawHelix);
+    }
+    drawHelix();
+    
+    // Dashboard Functions
+    function increment(id) {
+      const el = document.getElementById(id);
+      let value = parseInt(el.textContent);
+      value++;
+      el.textContent = value;
+    }
+    function resetCount(id) {
+      document.getElementById(id).textContent = 0;
+    }
+    function simulateLoad() {
+      const el = document.getElementById('serverLoad');
+      let load = Math.floor(Math.random() * 100);
+      el.textContent = load + '%';
+    }
+    function addRevenue() {
+      const el = document.getElementById('revenue');
+      let current = parseFloat(el.textContent.replace('$',''));
+      let sale = (Math.random() * 100).toFixed(2);
+      current += parseFloat(sale);
+      el.textContent = '$' + current.toFixed(2);
+    }
+    function resetRevenue() {
+      document.getElementById('revenue').textContent = '$0.00';
+    }
+    
+    // Adjust canvas on window resize
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
