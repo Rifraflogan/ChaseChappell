@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Digital Detail Popup</title>
+  <!-- Import a modern, bold font -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      font-family: 'Oswald', sans-serif;
+      color: #00ff00;
+      overflow-x: hidden;
+      position: relative;
+    }
+    /* Product Grid Container */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    /* Product Card Styling */
+    .product-card {
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(8px);
+      border: 2px solid rgba(0,255,0,0.3);
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(0,255,0,0.4);
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .product-card:hover {
+      transform: scale(1.05);
+    }
+    .product-card img {
+      width: 100%;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+    .product-card h2 {
+      font-size: 1.5em;
+      margin-bottom: 10px;
+    }
+    /* Modal Overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    /* Modal Content (Glassmorphic Card) */
+    .modal-content {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(0,255,255,0.3);
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      color: #fff;
+      position: relative;
+      opacity: 0;
+      transform: translateY(-50px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .modal-overlay.active .modal-content {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .modal-content h2 {
+      font-size: 2em;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .modal-content p {
+      font-size: 1em;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+    .modal-content button.close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: transparent;
+      border: 2px solid #00ff00;
+      color: #00ff00;
+      padding: 5px 10px;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+    /* Optional: Glitch Effect on Modal (subtle) */
+    @keyframes glitch {
+      0% { clip: rect(42px, 9999px, 44px, 0); transform: skew(0.5deg); }
+      20% { clip: rect(12px, 9999px, 40px, 0); transform: skew(-0.5deg); }
+      40% { clip: rect(22px, 9999px, 60px, 0); transform: skew(0.5deg); }
+      60% { clip: rect(32px, 9999px, 50px, 0); transform: skew(-0.5deg); }
+      80% { clip: rect(42px, 9999px, 44px, 0); transform: skew(0.5deg); }
+      100% { clip: rect(12px, 9999px, 40px, 0); transform: skew(-0.5deg); }
+    }
+    .modal-content.glitch::before {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      color: #00ff00;
+      opacity: 0.8;
+      clip: rect(0, 900px, 0, 0);
+      animation: glitch 2s infinite;
+    }
+  </style>
+</head>
+<body>
+  <!-- Product Grid -->
+  <div class="product-grid">
+    <!-- Product Card 1 -->
+    <div class="product-card" data-title="Neon Widget" data-description="This futuristic widget glows with neon energy and helps power your digital dreams.">
+      <img src="https://via.placeholder.com/200x150?text=Neon+Widget" alt="Neon Widget">
+      <h2>Neon Widget</h2>
+    </div>
+    <!-- Product Card 2 -->
+    <div class="product-card" data-title="Cyber Gadget" data-description="A sleek, high-tech gadget to connect you to the cyber world.">
+      <img src="https://via.placeholder.com/200x150?text=Cyber+Gadget" alt="Cyber Gadget">
+      <h2>Cyber Gadget</h2>
+    </div>
+    <!-- Product Card 3 -->
+    <div class="product-card" data-title="Digital Trinket" data-description="A small, powerful trinket that pulses with digital energy.">
+      <img src="https://via.placeholder.com/200x150?text=Digital+Trinket" alt="Digital Trinket">
+      <h2>Digital Trinket</h2>
+    </div>
+    <!-- Product Card 4 -->
+    <div class="product-card" data-title="Neuro Chip" data-description="An advanced chip for next-gen neural interfaces and digital connectivity.">
+      <img src="https://via.placeholder.com/200x150?text=Neuro+Chip" alt="Neuro Chip">
+      <h2>Neuro Chip</h2>
+    </div>
+  </div>
+  
+  <!-- Modal Overlay -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content" id="modalContent">
+      <button class="close-btn" id="closeBtn">X</button>
+      <h2 id="modalTitle">Product Title</h2>
+      <p id="modalDescription">Product description goes here. This detailed text provides more information about the selected product.</p>
+    </div>
+  </div>
+  
+  <script>
+    // Get modal elements
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalContent = document.getElementById('modalContent');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDescription = document.getElementById('modalDescription');
+    const closeBtn = document.getElementById('closeBtn');
+    
+    // Add click event to all product cards
+    document.querySelectorAll('.product-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const title = card.getAttribute('data-title');
+        const description = card.getAttribute('data-description');
+        modalTitle.textContent = title;
+        modalDescription.textContent = description;
+        modalContent.setAttribute('data-text', title); // For glitch effect
+        modalOverlay.classList.add('active');
+      });
+    });
+    
+    // Close modal on clicking the close button
+    closeBtn.addEventListener('click', () => {
+      modalOverlay.classList.remove('active');
+    });
+    
+    // Close modal if clicking outside modal content
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) {
+        modalOverlay.classList.remove('active');
+      }
+    });
+  </script>
+</body>
+</html>
