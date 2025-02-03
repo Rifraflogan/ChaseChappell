@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scrolling Pixel Cityscape</title>
+  <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000; /* Black background */
+      overflow: hidden;
+    }
+    /* Full-Screen Canvas */
+    #cityscapeCanvas {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="cityscapeCanvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById("cityscapeCanvas");
+    const ctx = canvas.getContext("2d");
+    
+    // Set canvas dimensions to fill the window.
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      horizon = canvas.height * 0.75; // Define a horizon line at 75% height.
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    // Define our horizon line (where buildings "rest")
+    let horizon = canvas.height * 0.75;
+
+    // Building constructor for each building.
+    class Building {
+      constructor(layer) {
+        // For background layer, buildings are smaller and move slower.
+        // For foreground layer, buildings are taller and move faster.
+        this.layer = layer; // "bg" or "fg"
+        this.reset();
+      }
+      
+      reset() {
+        // Choose a random width between 20 and 80 pixels.
+        this.width = 20 + Math.random() * 60;
+        // Building height depends on layer.
+        if (this.layer === "bg") {
+          this.height = Math.random() * 50 + 50; // 50 to 100 pixels
+          this.speed = 0.5 + Math.random() * 0.5; // slower speed
+          this.color = "#3366ff"; // Bright blue for background buildings
+        } else {
+          this.height = Math.random() * 100 + 100; // 100 to 200 pixels
+          this.speed = 1 + Math.random(); // faster speed
+          this.color = "#ff3399"; // Vibrant pink for foreground buildings
+        }
+        // Start building off-screen to the right.
+        this.x = canvas.width + Math.random() * canvas.width;
+        // The building's top is at the horizon minus its height.
+        this.y = horizon - this.height;
+      }
+      
+      update() {
+        this.x -= this.speed;
+        // If the building has completely moved off the left side, reset it.
+        if (this.x + this.width < 0) {
+          this.reset();
+          // Start it off-screen to the right.
+          this.x = canvas.width;
+        }
+      }
+      
+      draw(ctx) {
+        ctx.fillStyle = this.color;
+        // Draw a pixelated building (rectangle)
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+      }
+    }
+    
+    // Create two arrays for background and foreground buildings.
+    const bgBuildings = [];
+    const fgBuildings = [];
+    const numBgBuildings = 15;
+    const numFgBuildings = 25;
+    
+    for (let i = 0; i < numBgBuildings; i++) {
+      bgBuildings.push(new Building("bg"));
+    }
+    for (let i = 0; i < numFgBuildings; i++) {
+      fgBuildings.push(new Building("fg"));
+    }
+    
+    // Main animation loop
+    function animate() {
+      // Clear the canvas with a slightly transparent black to create a trailing effect.
+      ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw a gradient sky above the horizon for contrast.
+      const skyGradient = ctx.createLinearGradient(0, 0, 0, horizon);
+      skyGradient.addColorStop(0, "#3333ff"); // Bright blue
+      skyGradient.addColorStop(1, "#000");
+      ctx.fillStyle = skyGradient;
+      ctx.fillRect(0, 0, canvas.width, horizon);
+      
+      // Draw a subtle horizon line.
+      ctx.fillStyle = "#444";
+      ctx.fillRect(0, horizon, canvas.width, canvas.height - horizon);
+      
+      // Update and draw background buildings.
+      bgBuildings.forEach(building => {
+        building.update();
+        building.draw(ctx);
+      });
+      
+      // Update and draw foreground buildings.
+      fgBuildings.forEach(building => {
+        building.update();
+        building.draw(ctx);
+      });
+      
+      requestAnimationFrame(animate);
+    }
+    
+    animate();
+  </script>
+</body>
+</html>
