@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neon Bio‑Tech Product Detail</title>
+  <!-- Import a modern bold font -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      font-family: 'Oswald', sans-serif;
+      color: #00ff00;
+      overflow-x: hidden;
+      position: relative;
+    }
+    /* Full-screen Neon Network Background */
+    #networkCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      z-index: 0;
+    }
+    /* Header with Navigation */
+    header {
+      position: relative;
+      z-index: 2;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      box-shadow: 0 0 10px rgba(0,255,0,0.5);
+      text-align: center;
+    }
+    header h1 {
+      font-size: 2.5em;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #00ff00;
+    }
+    nav {
+      margin-top: 10px;
+    }
+    nav a {
+      color: #00ff00;
+      text-decoration: none;
+      margin: 0 10px;
+      font-size: 1em;
+    }
+    /* Product Detail Container */
+    .product-container {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 40px auto;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(0,255,0,0.3);
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,255,0,0.5);
+      padding: 30px;
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+    .product-image {
+      flex: 1 1 300px;
+      max-width: 500px;
+    }
+    .product-image img {
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,255,0,0.5);
+    }
+    .product-info {
+      flex: 1 1 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .product-info h2 {
+      font-size: 2em;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+    .product-info p.description {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .product-info p.price {
+      font-size: 2em;
+      margin-bottom: 20px;
+      color: #00ff00;
+    }
+    .product-info .buttons {
+      display: flex;
+      gap: 15px;
+    }
+    .product-info .buttons button {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+    .product-info .buttons button.add-to-cart {
+      background: linear-gradient(45deg, #00ff00, #00e600);
+      color: #000;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    .product-info .buttons button.add-to-cart:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #00e600, #00cc00);
+    }
+    .product-info .buttons button.buy-now {
+      background: linear-gradient(45deg, #ffffff, #e6e6e6);
+      color: #000;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    .product-info .buttons button.buy-now:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #e6e6e6, #cccccc);
+    }
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .product-container {
+        flex-direction: column;
+      }
+      .product-info {
+        margin-top: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Neon Network Background Canvas -->
+  <canvas id="networkCanvas"></canvas>
+  
+  <!-- Header -->
+  <header>
+    <h1>Neon Bio‑Tech</h1>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Products</a>
+      <a href="#">Cart</a>
+      <a href="#">Account</a>
+    </nav>
+  </header>
+  
+  <!-- Product Detail Container -->
+  <div class="product-container">
+    <!-- Product Image Section -->
+    <div class="product-image">
+      <img src="https://via.placeholder.com/500x400?text=Product+Image" alt="Neon BioTech Widget">
+    </div>
+    <!-- Product Information Section -->
+    <div class="product-info">
+      <h2>Neon BioTech Widget</h2>
+      <p class="description">
+        Experience the future with our cutting‑edge Neon BioTech Widget—engineered with DNA‑powered algorithms for unmatched performance. Its sleek, futuristic design and neon glow will supercharge your digital world.
+      </p>
+      <p class="price">$79.99</p>
+      <div class="buttons">
+        <button class="add-to-cart">Add to Cart</button>
+        <button class="buy-now">Buy Now</button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Set up Neon Network Background Animation
+    const canvas = document.getElementById('networkCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    const nodeCount = 100;
+    const nodes = [];
+    const maxDistance = 150;
+    
+    class Node {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 1.5;
+        this.vy = (Math.random() - 0.5) * 1.5;
+        this.radius = Math.random() * 2 + 1;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = "#00ff00";
+        ctx.fill();
+      }
+    }
+    
+    for (let i = 0; i < nodeCount; i++) {
+      nodes.push(new Node());
+    }
+    
+    function drawNetwork() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      for (let i = 0; i < nodeCount; i++) {
+        for (let j = i + 1; j < nodeCount; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < maxDistance) {
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.strokeStyle = `rgba(0,255,0,${1 - dist / maxDistance})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
+      
+      nodes.forEach(node => {
+        node.update();
+        node.draw();
+      });
+      
+      requestAnimationFrame(drawNetwork);
+    }
+    drawNetwork();
+    
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
