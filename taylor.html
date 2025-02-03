@@ -4,44 +4,78 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Free Coffee Tomorrow!</title>
-  <!-- Import a playful cursive font and a bold sans-serif -->
+  <!-- Import fonts: a playful cursive for the header and a bold sans-serif for other text -->
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Oswald:wght@700&display=swap" rel="stylesheet">
   <style>
-    /* Global reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    html, body {
-      height: 100%;
+    /* Global Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    /* Background: Animated warm coffee tones with subtle bean accents */
+    body {
       font-family: 'Oswald', sans-serif;
-      background: linear-gradient(135deg, #4b3621, #a67c52); /* Warm coffee-inspired colors */
+      background: linear-gradient(135deg, #4b3621, #a67c52, #4b3621);
+      background-size: 400% 400%;
+      animation: bgShift 10s ease infinite;
       display: flex;
-      align-items: center;
       justify-content: center;
-      color: #333;
-    }
-    /* Centered card with Starbucks vibes */
-    .card {
-      background: #fff;
-      width: 350px;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      text-align: center;
+      align-items: center;
+      height: 100vh;
       position: relative;
+      overflow: hidden;
+    }
+    @keyframes bgShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    /* Optional: Animated coffee bean particles (simple dots) */
+    .bean {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 50%;
+      width: 6px;
+      height: 6px;
+      animation: float 6s linear infinite;
+    }
+    @keyframes float {
+      from { transform: translateY(0); opacity: 0.8; }
+      to { transform: translateY(100vh); opacity: 0; }
+    }
+    /* Create a few bean instances via pseudo-elements on body */
+    body::before, body::after {
+      content: "";
+      position: absolute;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 50%;
+      width: 8px;
+      height: 8px;
+      animation: float 8s linear infinite;
+      opacity: 0.7;
+    }
+    body::before { left: 20%; animation-duration: 7s; }
+    body::after { left: 70%; animation-duration: 9s; }
+    
+    /* Centered Card */
+    .card {
+      background: rgba(255,255,255,0.95);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      text-align: center;
+      width: 350px;
+      position: relative;
+      z-index: 1;
     }
     .card h1 {
       font-family: 'Pacifico', cursive;
       font-size: 2em;
-      margin-bottom: 10px;
       color: #00704A; /* Starbucks green */
+      margin-bottom: 10px;
     }
     .card p {
       font-size: 1em;
-      margin-bottom: 20px;
       color: #555;
+      margin-bottom: 20px;
     }
     .card input[type="text"] {
       width: 100%;
@@ -51,6 +85,8 @@
       border-radius: 8px;
       margin-bottom: 15px;
       outline: none;
+      background: transparent;
+      color: #333;
     }
     .card input[type="submit"] {
       width: 100%;
@@ -62,11 +98,13 @@
       color: #fff;
       cursor: pointer;
       transition: background 0.3s ease;
+      text-transform: uppercase;
     }
     .card input[type="submit"]:hover {
       background: #005634;
     }
-    /* Congratulatory overlay */
+    
+    /* Congratulatory Overlay */
     #congrats-overlay {
       position: fixed;
       top: 0;
@@ -74,18 +112,14 @@
       width: 100%;
       height: 100%;
       background: rgba(0,0,0,0.9);
-      display: flex;
+      display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.5s ease;
       z-index: 100;
     }
     #congrats-overlay.show {
-      opacity: 1;
-      visibility: visible;
+      display: flex;
     }
     #congrats-overlay h2 {
       font-family: 'Pacifico', cursive;
@@ -94,24 +128,42 @@
       margin-bottom: 20px;
       animation: popIn 0.8s ease-out forwards;
     }
-    #congrats-overlay .coffee-cup {
-      font-size: 5em;
-      animation: popIn 0.8s ease-out forwards 0.3s;
-    }
     @keyframes popIn {
-      0% {
-        transform: scale(0.2);
-        opacity: 0;
-      }
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
+      0% { transform: scale(0.2); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    /* Coffee Cup with Animated Steam */
+    .coffee-container {
+      position: relative;
+      font-size: 5em;
+      color: #00704A;
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-20px); }
+      60% { transform: translateY(-10px); }
+    }
+    .coffee-container .steam {
+      position: absolute;
+      top: -40px;
+      left: 50%;
+      width: 10px;
+      height: 30px;
+      background: rgba(255,255,255,0.8);
+      border-radius: 50%;
+      opacity: 0.7;
+      transform: translateX(-50%);
+      animation: steamRise 2s infinite;
+    }
+    @keyframes steamRise {
+      0% { transform: translate(-50%, 0) scale(0.5); opacity: 0.7; }
+      100% { transform: translate(-50%, -50px) scale(1); opacity: 0; }
     }
   </style>
 </head>
 <body>
-  <!-- Popup card -->
+  <!-- Entry Card -->
   <div class="card" id="coffeeCard">
     <h1>Free Coffee Tomorrow!</h1>
     <p>Enter Logan's favorite color for a free coffee tomorrow!</p>
@@ -120,11 +172,17 @@
       <input type="submit" value="Submit">
     </form>
   </div>
-  <!-- Congratulatory overlay -->
+  
+  <!-- Congratulatory Overlay -->
   <div id="congrats-overlay">
     <h2>Congrats, Enjoy Your Coffee!</h2>
-    <div class="coffee-cup">☕</div>
+    <div class="coffee-container">
+      ☕
+      <div class="steam" style="left: 30%; animation-delay: 0s;"></div>
+      <div class="steam" style="left: 70%; animation-delay: 0.5s;"></div>
+    </div>
   </div>
+  
   <script>
     document.getElementById('coffeeForm').addEventListener('submit', function(e) {
       e.preventDefault();
@@ -134,7 +192,6 @@
         document.getElementById('coffeeCard').style.display = 'none';
         document.getElementById('congrats-overlay').classList.add('show');
       } else {
-        // Optional: Provide feedback for an incorrect guess.
         alert("Oops, that's not it! Try again!");
       }
     });
