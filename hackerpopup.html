@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anonymous Entry Scan</title>
+  <!-- Import a bold, hacker-style font from Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    /* Ensure full height and hide overflow */
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: black;
+    }
+    /* Matrix rain canvas positioned behind everything */
+    #matrix {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+    /* Centered popup card with hacker vibe */
+    .form-container {
+      position: relative;
+      z-index: 1;
+      background: rgba(0, 0, 0, 0.85);
+      border: 2px solid #0F0;
+      border-radius: 10px;
+      padding: 20px;
+      width: 400px;
+      max-width: 90%;
+      margin: 0 auto;
+      text-align: center;
+      color: #0F0;
+      font-family: 'Oswald', sans-serif;
+      box-shadow: 0 0 20px #0F0;
+      overflow: hidden;
+    }
+    .form-container h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+    .form-container p {
+      font-size: 1em;
+      margin-bottom: 20px;
+    }
+    .form-container input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #0F0;
+      border-radius: 5px;
+      background: transparent;
+      color: #0F0;
+      font-size: 1em;
+      margin-bottom: 15px;
+    }
+    .form-container input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      background: #0F0;
+      border: none;
+      border-radius: 5px;
+      color: black;
+      font-size: 1em;
+      font-family: 'Oswald', sans-serif;
+      cursor: pointer;
+    }
+    /* Scanning line effect over the card */
+    .form-container::after {
+      content: "";
+      position: absolute;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, transparent, rgba(0,255,0,0.3), transparent);
+      animation: scan 3s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes scan {
+      0% { top: -100%; }
+      100% { top: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Matrix rain background canvas -->
+  <canvas id="matrix"></canvas>
+  
+  <!-- Popup card for anonymous entry -->
+  <div class="form-container">
+    <h1>Anonymous Entry</h1>
+    <p>Scan to Access</p>
+    <form id="entryForm">
+      <input type="text" placeholder="Enter Passcode" required>
+      <input type="submit" value="Scan">
+    </form>
+  </div>
+  
+  <script>
+    // Matrix rain effect script
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()";
+    const lettersArray = letters.split("");
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
+    
+    function drawMatrix() {
+      // Faintly clear the canvas with a black overlay to create the trail effect
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#0F0"; // Green text for the rain
+      ctx.font = fontSize + "px monospace";
+      for (let i = 0; i < drops.length; i++) {
+        const text = lettersArray[Math.floor(Math.random() * lettersArray.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        // Reset drop randomly after it reaches the bottom
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+    setInterval(drawMatrix, 33);
+    
+    // Adjust canvas size on window resize
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
