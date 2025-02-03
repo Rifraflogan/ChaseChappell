@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Retro Pac-Man Style Game</title>
+  <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+    canvas {
+      display: block;
+      background: #000;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas"></canvas>
+  <script>
+    // Set up the canvas.
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const tileSize = 24;
+    const rows = 15;
+    const cols = 15;
+    canvas.width = cols * tileSize;
+    canvas.height = rows * tileSize;
+
+    // Maze definition:
+    // 0: pellet, 1: wall, 2: empty space (pellet eaten)
+    // A simple maze with border walls and some inner walls.
+    const maze = [
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,0,1,0,0,0,0,0,0,1],
+      [1,0,1,1,0,1,0,1,0,1,1,0,1,0,1],
+      [1,0,1,0,0,1,0,0,0,1,0,0,1,0,1],
+      [1,0,1,0,1,1,1,1,0,1,0,1,1,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,1,0,1,1,1,1,1,1,1,0,1,0,1],
+      [1,0,1,0,0,0,0,0,0,0,1,0,1,0,1],
+      [1,0,1,1,1,1,0,1,0,1,1,0,1,0,1],
+      [1,0,0,0,0,0,0,1,0,0,0,0,1,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+    ];
+    // Adjust rows if needed.
+    // For our maze array above, rows=11, cols=15. We'll recalc canvas height:
+    const mazeRows = maze.length;
+    const mazeCols = maze[0].length;
+    canvas.width = mazeCols * tileSize;
+    canvas.height = mazeRows * tileSize;
+
+    // Pac-Man state
+    let pacman = {
+      row: 1,
+      col: 1,
+      dir: { row: 0, col: 0 }
+    };
+
+    // Draw the maze.
+    function drawMaze() {
+      for (let r = 0; r < mazeRows; r++) {
+        for (let c = 0; c < mazeCols; c++) {
+          if (maze[r][c] === 1) {
+            // Wall: draw a blue block.
+            ctx.fillStyle = "#0000ff";
+            ctx.fillRect(c * tileSize, r * tileSize, tileSize, tileSize);
+          } else if (maze[r][c] === 0) {
+            // Pellet: draw a small yellow circle.
+            ctx.fillStyle = "#ffff00";
+            ctx.beginPath();
+            ctx.arc(c * tileSize + tileSize/2, r * tileSize + tileSize/2, tileSize/8, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          // If maze[r][c] is 2 (empty), draw nothing.
+        }
+      }
+    }
+
+    // Draw Pac-Man as a circle with an open mouth.
+    function drawPacman() {
+      const x = pacman.col * tileSize + tileSize/2;
+      const y = pacman.row * tileSize + tileSize/2;
+      const radius = tileSize/2 - 2;
+      ctx.fillStyle = "#ffff00";
+      ctx.beginPath();
+      // Create an open mouth effect.
+      ctx.arc(x, y, radius, 0.25 * Math.PI, 1.75 * Math.PI, false);
+      ctx.lineTo(x, y);
+      ctx.fill();
+    }
+
+    // Update and draw the game.
+    function updateGame() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawMaze();
+      drawPacman();
+    }
+
+    updateGame();
+
+    // Handle keyboard input.
+    document.addEventListener("keydown", function(e) {
+      let newRow = pacman.row;
+      let newCol = pacman.col;
+      if (e.key === "ArrowUp") newRow--;
+      if (e.key === "ArrowDown") newRow++;
+      if (e.key === "ArrowLeft") newCol--;
+      if (e.key === "ArrowRight") newCol++;
+      // Check bounds and wall collision.
+      if (newRow >= 0 && newRow < mazeRows && newCol >= 0 && newCol < mazeCols) {
+        if (maze[newRow][newCol] !== 1) {
+          pacman.row = newRow;
+          pacman.col = newCol;
+          // If there's a pellet, mark it as eaten.
+          if (maze[newRow][newCol] === 0) {
+            maze[newRow][newCol] = 2;
+          }
+        }
+      }
+      updateGame();
+    });
+  </script>
+</body>
+</html>
