@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Futuristic Neon Bio Dashboard</title>
-  <!-- Import the Oswald font -->
+  <!-- Import the Oswald font for bold, all‑caps headings -->
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
   <!-- Include Chart.js from CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -18,10 +18,10 @@
     html, body {
       width: 100%;
       height: 100%;
-      background: #000;
+      background: #000; /* Near‑black background */
       font-family: 'Oswald', sans-serif;
       overflow: hidden;
-      color: #00ff00;
+      color: #00ff00; /* Neon green accents for text */
     }
     /* DNA Helix Animated Background Canvas */
     #bioCanvas {
@@ -40,7 +40,7 @@
       height: 100vh;
       overflow-y: auto;
     }
-    /* Flex container for cards */
+    /* Flex container for stat panels */
     .cards {
       display: flex;
       flex-wrap: wrap;
@@ -48,17 +48,18 @@
       gap: 20px;
       margin-bottom: 40px;
     }
-    /* Glassmorphic Dashboard Cards with Pulsating Glow */
+    /* Glassmorphic Dashboard Cards with Subtle Pulsating Glow */
     .card {
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.6);
       backdrop-filter: blur(10px);
-      border: 2px solid rgba(0,255,0,0.3);
+      border: 2px solid rgba(0,255,0,0.5);
       border-radius: 15px;
       padding: 20px;
-      width: 200px;
+      width: 220px;
       text-align: center;
       transition: transform 0.3s ease;
-      animation: pulseGlow 2s infinite alternate;
+      /* A subtle, slow pulsating neon glow */
+      animation: pulseGlow 3s infinite alternate;
     }
     .card:hover {
       transform: scale(1.05);
@@ -66,31 +67,36 @@
     .card h2 {
       font-size: 1.2em;
       margin-bottom: 10px;
-      text-transform: uppercase;
+      text-transform: uppercase; /* All-caps headings */
       letter-spacing: 1px;
     }
     .metric-value {
       font-size: 2em;
       font-weight: bold;
     }
-    /* Graph Container with Glassmorphic & Pulsating Glow */
+    /* Graph Container */
     .graph-container {
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.6);
       backdrop-filter: blur(10px);
-      border: 2px solid rgba(0,255,0,0.3);
+      border: 2px solid rgba(0,255,0,0.5);
       border-radius: 15px;
       padding: 20px;
       max-width: 800px;
       margin: 0 auto;
-      animation: pulseGlow 2s infinite alternate;
+      animation: pulseGlow 3s infinite alternate;
     }
-    /* Keyframes for Pulsating Glow Effect */
+    /* Ensure the chart canvas occupies a fixed height */
+    .graph-container canvas {
+      width: 100% !important;
+      height: 300px !important;
+    }
+    /* Keyframes for Subtle Pulsating Glow Effect */
     @keyframes pulseGlow {
       0% {
-        box-shadow: 0 0 20px rgba(0,255,0,0.5);
+        box-shadow: 0 0 10px rgba(0,255,0,0.4);
       }
       100% {
-        box-shadow: 0 0 40px rgba(0,255,0,0.8);
+        box-shadow: 0 0 20px rgba(0,255,0,0.7);
       }
     }
     /* Responsive Adjustments */
@@ -100,7 +106,7 @@
         align-items: center;
       }
       .card {
-        width: 80%;
+        width: 90%;
       }
     }
   </style>
@@ -144,31 +150,30 @@
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     let time = 0;
+    
     function drawDNA() {
-      // Use a translucent black fill to create a trailing effect.
+      // Use a translucent black fill to create a smooth trailing effect.
       ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const centerX = canvas.width / 2;
-      const step = 20;           // Vertical spacing between DNA rungs.
-      const amplitude = 50;      // Maximum horizontal displacement.
+      const step = 20;       // Vertical spacing between DNA rungs.
+      const amplitude = 50;  // Maximum horizontal displacement.
       
       // Set up neon glow effects.
       ctx.lineCap = 'round';
       ctx.shadowColor = "#00ff00";
       ctx.shadowBlur = 10;
 
-      // Draw a series of rungs from top to bottom.
+      // Draw the DNA helix (strands and connecting base pairs).
       for (let y = -step; y < canvas.height + step; y += step) {
         let angle = (y + time) * 0.05;
         let xOffset = Math.sin(angle) * amplitude;
-        // Compute positions for the two strands.
         let leftX = centerX - xOffset;
         let rightX = centerX + xOffset;
-        // Use the sine value to modulate opacity (simulate depth).
-        let scale = (Math.sin(angle) + 1) / 2; // Ranges from 0 to 1.
+        let scale = (Math.sin(angle) + 1) / 2; // Value between 0 and 1 for opacity modulation.
 
-        // Draw connecting line ("base pair")
+        // Draw connecting line (base pair).
         ctx.beginPath();
         ctx.moveTo(leftX, y);
         ctx.lineTo(rightX, y);
@@ -181,6 +186,7 @@
         ctx.arc(leftX, y, 3, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(0,255,0,${0.5 + scale * 0.5})`;
         ctx.fill();
+
         // Draw right strand circle.
         ctx.beginPath();
         ctx.arc(rightX, y, 3, 0, Math.PI * 2);
@@ -199,7 +205,7 @@
 
     /* ====================================
        Live-Updating Neon Line Chart
-       (Using Chart.js to simulate real-time data updates)
+       (Using Chart.js for real-time data updates)
     ==================================== */
     const ctxChart = document.getElementById('lineChart').getContext('2d');
     const chartData = {
@@ -217,6 +223,8 @@
       type: 'line',
       data: chartData,
       options: {
+        responsive: true,
+        maintainAspectRatio: false,
         animation: { duration: 500 },
         scales: {
           x: {
@@ -235,6 +243,7 @@
         }
       }
     });
+    // Add new data points every second.
     setInterval(() => {
       const now = new Date();
       const timeLabel = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
