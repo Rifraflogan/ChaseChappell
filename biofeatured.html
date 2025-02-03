@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Digital Bio‑Tech Showcase</title>
+  <!-- Import fonts: Oswald for a modern bold look, and optionally a retro digital font -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      font-family: 'Oswald', sans-serif;
+      color: #00ff00;
+      overflow-x: hidden;
+      position: relative;
+    }
+    /* Neural Network Background Canvas */
+    #networkCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      z-index: 0;
+      display: block;
+    }
+    /* Header */
+    header {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      box-shadow: 0 0 10px rgba(0,255,0,0.5);
+    }
+    header h1 {
+      font-size: 2.5em;
+      letter-spacing: 2px;
+      color: #00ff00;
+    }
+    /* Collection Container */
+    .collection-container {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 20px auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    /* Product Card */
+    .product-card {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      border: 2px solid rgba(0,255,0,0.3);
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(0,255,0,0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .product-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 25px rgba(0,255,0,0.6);
+    }
+    .product-card img {
+      width: 100%;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+    .product-card h2 {
+      font-size: 1.5em;
+      margin-bottom: 10px;
+      color: #00ff00;
+    }
+    .product-card p.price {
+      font-size: 1.2em;
+      margin-bottom: 15px;
+      color: #fff;
+    }
+    .product-card .buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .product-card button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .product-card button.add-cart {
+      background: #00ff00;
+      color: #000;
+    }
+    .product-card button.add-cart:hover {
+      background: #00e600;
+      transform: scale(1.05);
+    }
+    .product-card button.buy-now {
+      background: #fff;
+      color: #000;
+    }
+    .product-card button.buy-now:hover {
+      background: #e6e6e6;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <!-- Neural Network Background -->
+  <canvas id="networkCanvas"></canvas>
+  
+  <!-- Header -->
+  <header>
+    <h1>Featured Collection</h1>
+  </header>
+  
+  <!-- Collection Grid -->
+  <div class="collection-container">
+    <!-- Product Card 1 -->
+    <div class="product-card">
+      <img src="https://via.placeholder.com/250x150?text=Neon+Widget" alt="Neon Widget">
+      <h2>Neon Widget</h2>
+      <p class="price">$29.99</p>
+      <div class="buttons">
+        <button class="add-cart">Add to Cart</button>
+        <button class="buy-now">Buy Now</button>
+      </div>
+    </div>
+    <!-- Product Card 2 -->
+    <div class="product-card">
+      <img src="https://via.placeholder.com/250x150?text=Cyber+Gadget" alt="Cyber Gadget">
+      <h2>Cyber Gadget</h2>
+      <p class="price">$49.99</p>
+      <div class="buttons">
+        <button class="add-cart">Add to Cart</button>
+        <button class="buy-now">Buy Now</button>
+      </div>
+    </div>
+    <!-- Product Card 3 -->
+    <div class="product-card">
+      <img src="https://via.placeholder.com/250x150?text=Digital+Trinket" alt="Digital Trinket">
+      <h2>Digital Trinket</h2>
+      <p class="price">$19.99</p>
+      <div class="buttons">
+        <button class="add-cart">Add to Cart</button>
+        <button class="buy-now">Buy Now</button>
+      </div>
+    </div>
+    <!-- Product Card 4 -->
+    <div class="product-card">
+      <img src="https://via.placeholder.com/250x150?text=Neuro+Chip" alt="Neuro Chip">
+      <h2>Neuro Chip</h2>
+      <p class="price">$99.99</p>
+      <div class="buttons">
+        <button class="add-cart">Add to Cart</button>
+        <button class="buy-now">Buy Now</button>
+      </div>
+    </div>
+    <!-- Additional product cards can be added here -->
+  </div>
+  
+  <script>
+    // Set up the canvas for the neural network background
+    const canvas = document.getElementById('networkCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    // Configure nodes for the network
+    const nodeCount = 80;
+    const nodes = [];
+    const maxDistance = 120;
+    
+    class Node {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 1.2;
+        this.vy = (Math.random() - 0.5) * 1.2;
+        this.radius = Math.random() * 2 + 1;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        // Bounce off edges
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = "#00ff00";
+        ctx.fill();
+      }
+    }
+    
+    for (let i = 0; i < nodeCount; i++) {
+      nodes.push(new Node());
+    }
+    
+    function drawNetwork() {
+      // Create a fading trail effect
+      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw connections between nodes that are close
+      for (let i = 0; i < nodeCount; i++) {
+        for (let j = i + 1; j < nodeCount; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < maxDistance) {
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.strokeStyle = `rgba(0,255,0,${1 - dist / maxDistance})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
+      
+      nodes.forEach(node => {
+        node.update();
+        node.draw();
+      });
+      
+      requestAnimationFrame(drawNetwork);
+    }
+    drawNetwork();
+    
+    // Resize canvas when window size changes
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      // Optionally, reinitialize nodes if necessary
+    });
+  </script>
+</body>
+</html>
