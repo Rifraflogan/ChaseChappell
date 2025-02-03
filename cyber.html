@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neon Cyber Login</title>
+  <!-- Import a bold modern font -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      font-family: 'Oswald', sans-serif;
+      color: #00ff00;
+      overflow: hidden;
+      position: relative;
+    }
+    /* Full-Screen Digital Rain Background Canvas */
+    #matrixCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      z-index: 0;
+    }
+    /* Centered Glassmorphic Login Card */
+    .login-card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 400px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(0, 255, 0, 0.3);
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+      text-align: center;
+      padding: 30px 20px;
+      z-index: 1;
+      transition: opacity 0.5s ease;
+    }
+    .login-card h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #00ff00;
+    }
+    .login-card input[type="text"],
+    .login-card input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 2px solid rgba(0, 255, 0, 0.5);
+      border-radius: 8px;
+      background: transparent;
+      color: #fff;
+      font-size: 1em;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    .login-card input[type="text"]:focus,
+    .login-card input[type="password"]:focus {
+      border-color: #00ff00;
+    }
+    .login-card input[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(45deg, #00ff00, #00e600);
+      color: #000;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: transform 0.3s ease, background 0.3s ease;
+      border: 2px solid #00ff00;
+      animation: pulsateOutline 2s infinite;
+    }
+    .login-card input[type="submit"]:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #00e600, #00cc00);
+    }
+    @keyframes pulsateOutline {
+      0%, 100% { box-shadow: 0 0 5px #00ff00, 0 0 15px #00ff00; }
+      50% { box-shadow: 0 0 15px #00ff00, 0 0 25px #00ff00; }
+    }
+    /* Responsive Adjustments */
+    @media (max-width: 600px) {
+      .login-card h1 { font-size: 2em; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Matrix Digital Rain Background -->
+  <canvas id="matrixCanvas"></canvas>
+  
+  <!-- Glassmorphic Login Card -->
+  <div class="login-card" id="loginCard">
+    <h1>Login</h1>
+    <form id="loginForm">
+      <input type="text" placeholder="Username" required>
+      <input type="password" placeholder="Password" required>
+      <input type="submit" value="Login">
+    </form>
+  </div>
+  
+  <script>
+    // Matrix Rain Background Animation
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops = [];
+    for (let x = 0; x < columns; x++) {
+      drops[x] = 1;
+    }
+    
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#00ff00";
+      ctx.font = fontSize + "px monospace";
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+        ctx.fillText(text, x, y);
+        if (y > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+      requestAnimationFrame(drawMatrix);
+    }
+    
+    drawMatrix();
+    
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      // Recalculate columns and reset drops
+      const newColumns = canvas.width / fontSize;
+      drops.length = Math.floor(newColumns);
+      for (let i = 0; i < drops.length; i++) {
+        if (drops[i] === undefined) drops[i] = 1;
+      }
+    });
+    
+    // Login Form Submission Behavior (Demo)
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      // For demo purposes, we'll just alert a message.
+      alert("Logged in! (Simulation)");
+    });
+  </script>
+</body>
+</html>
