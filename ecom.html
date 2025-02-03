@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ecom Accelerator - Unlock Your Shopify Success</title>
+  <!-- Import a modern bold font -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      font-family: 'Oswald', sans-serif;
+      overflow: hidden;
+      position: relative;
+      color: #00ff00;
+    }
+    /* Full-Screen Animated Neon Network Background */
+    #bgCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      background: #000;
+    }
+    /* Centered Glassmorphic Card */
+    .hero {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      width: 90%;
+      max-width: 500px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(0, 255, 0, 0.3);
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(0,255,0,0.5);
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .hero h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #00ff00;
+    }
+    .hero p {
+      font-size: 1.1em;
+      margin-bottom: 30px;
+      color: #c0ffc0;
+    }
+    .email-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .email-form input[type="email"] {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 1em;
+      border: 2px solid rgba(0,255,0,0.5);
+      border-radius: 8px;
+      background: transparent;
+      color: #fff;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    .email-form input[type="email"]:focus {
+      border-color: #00ff00;
+    }
+    .email-form input[type="submit"] {
+      padding: 12px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(45deg, #00ff00, #00cc00);
+      color: #000;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: transform 0.3s ease, background 0.3s ease;
+      border: 2px solid #00ff00;
+      animation: pulsate 2s infinite;
+    }
+    .email-form input[type="submit"]:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #00cc00, #00b300);
+    }
+    @keyframes pulsate {
+      0%, 100% { box-shadow: 0 0 5px #00ff00, 0 0 15px #ff00ff; }
+      50% { box-shadow: 0 0 15px #00ff00, 0 0 25px #ff00ff; }
+    }
+    /* Responsive Adjustments */
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 2em; }
+      .hero p { font-size: 1em; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Animated Neon Network Background -->
+  <canvas id="bgCanvas"></canvas>
+  
+  <!-- Glassmorphic Email Capture Card -->
+  <div class="hero">
+    <h1>Ecom Accelerator</h1>
+    <p>Unlock Shopify success with exclusive courses and 1:1 mentorship from Chase.</p>
+    <form class="email-form" id="emailForm">
+      <input type="email" placeholder="Enter your email" required>
+      <input type="submit" value="Get Instant Access">
+    </form>
+  </div>
+  
+  <script>
+    // Neon Network Background Animation
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    const pixelSize = 16;
+    const columns = Math.floor(canvas.width / pixelSize);
+    const drops = Array(columns).fill(0);
+    const palette = ['#00ff00', '#00e600', '#00cc00'];
+    
+    function drawBackground() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      for (let i = 0; i < drops.length; i++) {
+        const x = i * pixelSize;
+        const y = drops[i] * pixelSize;
+        const color = palette[Math.floor(Math.random() * palette.length)];
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, pixelSize - 2, pixelSize - 2);
+        
+        if (y > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+      requestAnimationFrame(drawBackground);
+    }
+    drawBackground();
+    
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const newColumns = Math.floor(canvas.width / pixelSize);
+      drops.length = newColumns;
+      for (let i = 0; i < newColumns; i++) {
+        if (drops[i] === undefined) drops[i] = 0;
+      }
+    });
+    
+    // Optional: Form submission behavior (for demo purposes)
+    document.getElementById('emailForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert("Welcome to the Ecom Accelerator! Check your email for details.");
+    });
+  </script>
+</body>
+</html>
