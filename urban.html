@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Urban Graffiti Access</title>
+  <!-- Import fonts: Bangers for a graffiti feel and Oswald for body text -->
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      font-family: 'Oswald', sans-serif;
+      position: relative;
+    }
+    /* Canvas for Graffiti Splatter Background */
+    #canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+    /* Centered Glassmorphic Urban Card */
+    .card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 400px;
+      padding: 30px 20px;
+      border-radius: 15px;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255,255,255,0.2);
+      box-shadow: 0 0 20px rgba(255,255,255,0.2);
+      text-align: center;
+      z-index: 1;
+      color: #fff;
+    }
+    .card h1 {
+      font-family: 'Bangers', cursive;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      color: #FF1493; /* Neon pink accent */
+    }
+    .card p {
+      font-size: 1.1em;
+      margin-bottom: 20px;
+    }
+    .card input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 1em;
+      border: 2px solid #FF1493;
+      border-radius: 8px;
+      background: transparent;
+      color: #fff;
+      margin-bottom: 20px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    .card input[type="password"]:focus {
+      border-color: #FF69B4;
+    }
+    .card input[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      background: #FF1493;
+      color: #000;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: background 0.3s ease;
+    }
+    .card input[type="submit"]:hover {
+      background: #FF69B4;
+    }
+    /* Access Overlay: Shown after form submission */
+    #access-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      z-index: 10;
+      align-items: center;
+      justify-content: center;
+    }
+    #access-overlay h2 {
+      font-family: 'Bangers', cursive;
+      font-size: 4em;
+      color: #FF1493;
+      opacity: 0;
+      animation: fadeIn 1s forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Canvas for Graffiti Splatter Background -->
+  <canvas id="canvas"></canvas>
+  
+  <!-- Urban Graffiti Card -->
+  <div class="card" id="card">
+    <h1>Urban Vibes</h1>
+    <p>Enter your password to unlock the street energy!</p>
+    <form id="form">
+      <input type="password" placeholder="Enter password" required>
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+  
+  <!-- Access Overlay for Success Animation -->
+  <div id="access-overlay">
+    <h2>ACCESS GRANTED</h2>
+  </div>
+  
+  <script>
+    // Set up canvas for graffiti splatter background
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    const splatters = [];
+    // Graffiti palette: neon pink, electric blue, bright yellow, lime green, and orange
+    const colors = ['#FF1493', '#00BFFF', '#FFFF00', '#32CD32', '#FFA500'];
+    
+    class Splatter {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.radius = Math.random() * 15 + 5; // radius between 5 and 20
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+        this.lifetime = Math.random() * 2 + 1; // 1 to 3 seconds
+        this.opacity = 1;
+      }
+      update(delta) {
+        this.lifetime -= delta;
+        this.opacity = Math.max(this.lifetime / 3, 0);
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = this.opacity;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+    }
+    
+    let lastTime = performance.now();
+    function animate(time) {
+      const delta = (time - lastTime) / 1000;
+      lastTime = time;
+      // Clear the canvas with a semi-transparent black for a trailing effect
+      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Occasionally add new splatters
+      if (Math.random() < 0.1) {
+        splatters.push(new Splatter());
+      }
+      
+      // Update and draw splatters; remove those that have faded out
+      for (let i = splatters.length - 1; i >= 0; i--) {
+        splatters[i].update(delta);
+        splatters[i].draw();
+        if (splatters[i].lifetime <= 0) {
+          splatters.splice(i, 1);
+        }
+      }
+      
+      requestAnimationFrame(animate);
+    }
+    animate(performance.now());
+    
+    // Resize canvas on window resize
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+    
+    // Form submission handling: Hide card, show access overlay
+    document.getElementById('form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      document.getElementById('card').style.display = 'none';
+      document.getElementById('access-overlay').style.display = 'flex';
+    });
+  </script>
+</body>
+</html>
