@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Holographic Access</title>
+  <!-- Import a modern, bold font -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+      font-family: 'Oswald', sans-serif;
+      overflow: hidden;
+      position: relative;
+      color: #00ffff;
+    }
+    /* Particle Rain Background Canvas */
+    #backgroundCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      display: block;
+    }
+    /* Centered Holographic Card */
+    .holo-card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 400px;
+      padding: 30px;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      box-shadow: 0 0 20px rgba(0,255,255,0.5);
+      text-align: center;
+      z-index: 2;
+    }
+    .holo-card h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .holo-card p {
+      font-size: 1em;
+      margin-bottom: 20px;
+    }
+    .holo-card input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 1em;
+      border: 1px solid rgba(0,255,255,0.4);
+      border-radius: 8px;
+      background: transparent;
+      color: #00ffff;
+      margin-bottom: 20px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    .holo-card input[type="password"]:focus {
+      border-color: #00ffff;
+    }
+    .holo-card input[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      background: #00ffff;
+      color: #000;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: background 0.3s ease;
+    }
+    .holo-card input[type="submit"]:hover {
+      background: #00e6e6;
+    }
+    /* Holographic Layers on the Card using pseudo-elements */
+    .holo-card::before, .holo-card::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border-radius: inherit;
+      z-index: -1;
+      animation: holoShift 5s infinite;
+    }
+    .holo-card::before {
+      background: linear-gradient(45deg, rgba(0,255,255,0.2), transparent);
+      opacity: 0.7;
+    }
+    .holo-card::after {
+      background: linear-gradient(135deg, rgba(0,255,255,0.2), transparent);
+      opacity: 0.5;
+      animation-direction: reverse;
+    }
+    @keyframes holoShift {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      50% { transform: translate(10px, -10px) rotate(5deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Particle Rain Background -->
+  <canvas id="backgroundCanvas"></canvas>
+  
+  <!-- Holographic Password Entry Card -->
+  <div class="holo-card" id="holoCard">
+    <h1>Holographic Access</h1>
+    <p>Enter your password for futuristic access</p>
+    <form id="holoForm">
+      <input type="password" placeholder="Password" required>
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+  
+  <script>
+    // Particle Rain Effect for Holographic Background
+    const canvas = document.getElementById('backgroundCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.radius = Math.random() * 1.5 + 0.5;
+        this.speed = Math.random() * 1 + 0.5;
+        this.alpha = Math.random() * 0.5 + 0.2;
+      }
+      update() {
+        this.y += this.speed;
+        if (this.y > canvas.height) {
+          this.y = 0;
+          this.x = Math.random() * canvas.width;
+        }
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0,255,255,${this.alpha})`;
+        ctx.fill();
+      }
+    }
+    
+    const particles = [];
+    const particleCount = Math.floor(canvas.width / 2);
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+    
+    function animateParticles() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+    
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+    
+    // Optional: Form submission behavior
+    document.getElementById('holoForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert("Access Granted! Welcome to the future.");
+    });
+  </script>
+</body>
+</html>
