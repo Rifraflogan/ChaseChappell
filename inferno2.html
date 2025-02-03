@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Liquid Neon Flow Background</title>
+  <style>
+    /* Global reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="liquidCanvas"></canvas>
+  <script>
+    const canvas = document.getElementById("liquidCanvas");
+    const ctx = canvas.getContext("2d");
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+    
+    let time = 0;
+    const waves = [];
+    const numWaves = 5;
+    
+    // Create an array of waves with randomized parameters
+    for (let i = 0; i < numWaves; i++) {
+      waves.push({
+        amplitude: 20 + Math.random() * 30,         // 20 to 50 pixels
+        wavelength: 100 + Math.random() * 200,        // 100 to 300 pixels
+        speed: 0.5 + Math.random() * 0.5,             // 0.5 to 1.0
+        phase: Math.random() * 2 * Math.PI,           // random phase offset
+        yOffset: height / 2 + (i - numWaves / 2) * 20,  // vertical layering
+        // Two alternating neon red/orange hues with transparency
+        color: i % 2 === 0 ? "rgba(255,69,0,0.6)" : "rgba(255,99,71,0.6)"
+      });
+    }
+    
+    function drawLiquid() {
+      // Clear the canvas with a slight opacity for trailing effect
+      ctx.clearRect(0, 0, width, height);
+      ctx.globalCompositeOperation = "lighter";
+      
+      // Draw each wave as a filled shape
+      waves.forEach(wave => {
+        ctx.beginPath();
+        ctx.moveTo(0, wave.yOffset);
+        for (let x = 0; x < width; x += 2) {
+          const y = wave.yOffset + wave.amplitude * Math.sin((2 * Math.PI * x / wave.wavelength) + time * wave.speed + wave.phase);
+          ctx.lineTo(x, y);
+        }
+        // Close the shape at the bottom of the canvas
+        ctx.lineTo(width, height);
+        ctx.lineTo(0, height);
+        ctx.closePath();
+        ctx.fillStyle = wave.color;
+        ctx.fill();
+      });
+      
+      ctx.globalCompositeOperation = "source-over";
+      time += 0.02;
+      requestAnimationFrame(drawLiquid);
+    }
+    
+    drawLiquid();
+    
+    window.addEventListener("resize", () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
