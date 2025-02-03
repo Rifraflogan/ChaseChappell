@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ecom Accelerator - Neon Burst</title>
+  <!-- Import a modern bold font -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      font-family: 'Oswald', sans-serif;
+      overflow: hidden;
+      position: relative;
+      color: #00ff00;
+    }
+    /* Digital Pixel Rain Background (Optional) */
+    #bgCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      z-index: 0;
+    }
+    /* Glassmorphic Email Capture Card */
+    .hero {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      width: 90%;
+      max-width: 500px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(0,255,0,0.3);
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(0,255,0,0.5);
+      text-align: center;
+      padding: 40px 20px;
+      transition: opacity 0.5s ease;
+    }
+    .hero h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #00ff00;
+    }
+    .hero p {
+      font-size: 1.1em;
+      margin-bottom: 30px;
+      color: #c0ffc0;
+    }
+    .email-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .email-form input[type="email"] {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 1em;
+      border: 2px solid rgba(0,255,0,0.5);
+      border-radius: 8px;
+      background: transparent;
+      color: #fff;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    .email-form input[type="email"]:focus {
+      border-color: #00ff00;
+    }
+    .email-form input[type="submit"] {
+      padding: 12px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(45deg, #00ff00, #00e600);
+      color: #000;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: transform 0.3s ease, background 0.3s ease;
+      border: 2px solid #00ff00;
+      animation: pulsateOutline 2s infinite;
+    }
+    .email-form input[type="submit"]:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #00e600, #00cc00);
+    }
+    @keyframes pulsateOutline {
+      0%, 100% { box-shadow: 0 0 5px #00ff00, 0 0 15px #00ff00; }
+      50% { box-shadow: 0 0 15px #00ff00, 0 0 25px #00ff00; }
+    }
+    /* Radial Burst Animation Canvas (Overlay) */
+    #burstCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 3;
+      background: #000;
+      display: none;
+    }
+    /* Final Success Message Overlay */
+    .final-message {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3em;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #00ff00;
+      opacity: 0;
+      z-index: 4;
+      transition: opacity 0.5s ease;
+    }
+    /* Responsive Adjustments */
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 2em; }
+      .hero p { font-size: 1em; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Digital Pixel Rain Background (Optional) -->
+  <canvas id="bgCanvas"></canvas>
+  
+  <!-- Glassmorphic Email Capture Card -->
+  <div class="hero" id="heroCard">
+    <h1>Ecom Accelerator</h1>
+    <p>Unlock Shopify success with exclusive courses and 1:1 mentorship from Chase.</p>
+    <form class="email-form" id="emailForm">
+      <input type="email" placeholder="Enter your email" required>
+      <input type="submit" value="Get Instant Access">
+    </form>
+  </div>
+  
+  <!-- Radial Burst Animation Canvas -->
+  <canvas id="burstCanvas"></canvas>
+  <!-- Final Success Message -->
+  <div class="final-message" id="finalMessage">Welcome to Ecom Accelerator!</div>
+  
+  <script>
+    /* Background Digital Pixel Rain Animation (Optional) */
+    (function() {
+      const bgCanvas = document.getElementById('bgCanvas');
+      const bgCtx = bgCanvas.getContext('2d');
+      bgCanvas.width = window.innerWidth;
+      bgCanvas.height = window.innerHeight;
+      const pixelSize = 16;
+      const columns = Math.floor(bgCanvas.width / pixelSize);
+      const drops = Array(columns).fill(0);
+      const palette = ['#00ff00', '#00e600', '#00cc00'];
+      function drawBg() {
+        bgCtx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+        for (let i = 0; i < drops.length; i++) {
+          const x = i * pixelSize;
+          const y = drops[i] * pixelSize;
+          const color = palette[Math.floor(Math.random() * palette.length)];
+          bgCtx.fillStyle = color;
+          bgCtx.fillRect(x, y, pixelSize - 2, pixelSize - 2);
+          if (y > bgCanvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+          drops[i]++;
+        }
+        requestAnimationFrame(drawBg);
+      }
+      drawBg();
+      window.addEventListener('resize', () => {
+        bgCanvas.width = window.innerWidth;
+        bgCanvas.height = window.innerHeight;
+      });
+    })();
+    
+    /* Radial Neon Burst Animation */
+    const burstCanvas = document.getElementById('burstCanvas');
+    const burstCtx = burstCanvas.getContext('2d');
+    burstCanvas.width = window.innerWidth;
+    burstCanvas.height = window.innerHeight;
+    
+    let burstStartTime = null;
+    let burstX = 0, burstY = 0;
+    const burstDuration = 1500; // ms
+    let burstMaxRadius = Math.sqrt(window.innerWidth ** 2 + window.innerHeight ** 2);
+    
+    function animateBurst(timestamp) {
+      if (!burstStartTime) burstStartTime = timestamp;
+      const elapsed = timestamp - burstStartTime;
+      const progress = Math.min(elapsed / burstDuration, 1);
+      const currentRadius = progress * burstMaxRadius;
+      
+      burstCtx.clearRect(0, 0, burstCanvas.width, burstCanvas.height);
+      burstCtx.beginPath();
+      burstCtx.arc(burstX, burstY, currentRadius, 0, Math.PI * 2);
+      // Create a radial gradient that starts neon green and fades out.
+      const grad = burstCtx.createRadialGradient(burstX, burstY, currentRadius * 0.1, burstX, burstY, currentRadius);
+      grad.addColorStop(0, "rgba(0,255,0,0.8)");
+      grad.addColorStop(1, "rgba(0,255,0,0)");
+      burstCtx.fillStyle = grad;
+      burstCtx.fill();
+      
+      if (progress < 1) {
+        requestAnimationFrame(animateBurst);
+      } else {
+        // Once the burst is complete, hide the burst canvas and reveal the final message.
+        burstCanvas.style.display = "none";
+        document.getElementById('finalMessage').style.opacity = 1;
+      }
+    }
+    
+    window.addEventListener('resize', () => {
+      burstCanvas.width = window.innerWidth;
+      burstCanvas.height = window.innerHeight;
+      burstMaxRadius = Math.sqrt(window.innerWidth ** 2 + window.innerHeight ** 2);
+    });
+    
+    /* Form Submission Behavior */
+    document.getElementById('emailForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      // Optionally process the email here.
+      // Fade out the hero card.
+      const heroCard = document.getElementById('heroCard');
+      heroCard.style.opacity = 0;
+      setTimeout(() => { heroCard.style.display = "none"; }, 500);
+      // Determine the center of the submit button.
+      const submitBtn = this.querySelector('input[type="submit"]');
+      const rect = submitBtn.getBoundingClientRect();
+      burstX = rect.left + rect.width / 2;
+      burstY = rect.top + rect.height / 2;
+      // Show the burst canvas and start animation.
+      burstCanvas.style.display = "block";
+      burstStartTime = null;
+      requestAnimationFrame(animateBurst);
+    });
+  </script>
+</body>
+</html>
