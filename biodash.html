@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neon Dashboard</title>
+  <!-- Import a bold modern font -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      font-family: 'Oswald', sans-serif;
+      color: #00ff00;
+      overflow-x: hidden;
+      position: relative;
+    }
+    /* Neon Grid Background using CSS gradients */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        linear-gradient(0deg, transparent 24%, rgba(0,255,0,0.1) 25%, rgba(0,255,0,0.1) 26%, transparent 27%),
+        linear-gradient(90deg, transparent 24%, rgba(0,255,0,0.1) 25%, rgba(0,255,0,0.1) 26%, transparent 27%);
+      background-size: 50px 50px;
+      z-index: -1;
+    }
+    /* Header */
+    header {
+      text-align: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      box-shadow: 0 0 10px rgba(0,255,0,0.5);
+      position: relative;
+      z-index: 1;
+    }
+    header h1 {
+      font-size: 2.5em;
+      letter-spacing: 2px;
+      color: #00ff00;
+    }
+    /* Dashboard Container */
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 20px auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 0 20px;
+      position: relative;
+      z-index: 1;
+    }
+    /* Dashboard Card Styling */
+    .dashboard-card {
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      border: 2px solid rgba(0,255,0,0.3);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(0,255,0,0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .dashboard-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 25px rgba(0,255,0,0.6);
+    }
+    .dashboard-card h2 {
+      font-size: 1.5em;
+      margin-bottom: 10px;
+      color: #00ff00;
+    }
+    .dashboard-card p {
+      font-size: 2em;
+      margin: 10px 0;
+      color: #00ff00;
+    }
+    /* Button Container and Cooler Button Styles */
+    .dashboard-card .action-buttons {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .dashboard-card .action-buttons button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.3s ease;
+    }
+    .dashboard-card .action-buttons button.add-cart {
+      background: linear-gradient(45deg, #00ff00, #00cc00);
+      color: #000;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    .dashboard-card .action-buttons button.add-cart:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #00e600, #00cc00);
+    }
+    .dashboard-card .action-buttons button.buy-now {
+      background: linear-gradient(45deg, #ffffff, #e6e6e6);
+      color: #000;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    .dashboard-card .action-buttons button.buy-now:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #e6e6e6, #cccccc);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Neon Dashboard</h1>
+  </header>
+  
+  <div class="dashboard-container">
+    <!-- Dashboard Card 1: Total Users -->
+    <div class="dashboard-card">
+      <h2>Total Users</h2>
+      <p id="usersCount">0</p>
+      <div class="action-buttons">
+        <button class="add-cart" onclick="increment('usersCount')">+ User</button>
+        <button class="buy-now" onclick="resetCount('usersCount')">Reset</button>
+      </div>
+    </div>
+    <!-- Dashboard Card 2: Active Sessions -->
+    <div class="dashboard-card">
+      <h2>Active Sessions</h2>
+      <p id="sessionsCount">0</p>
+      <div class="action-buttons">
+        <button class="add-cart" onclick="increment('sessionsCount')">+ Session</button>
+        <button class="buy-now" onclick="resetCount('sessionsCount')">Reset</button>
+      </div>
+    </div>
+    <!-- Dashboard Card 3: Server Load -->
+    <div class="dashboard-card">
+      <h2>Server Load</h2>
+      <p id="serverLoad">0%</p>
+      <div class="action-buttons">
+        <button class="add-cart" onclick="simulateLoad()">Simulate Load</button>
+      </div>
+    </div>
+    <!-- Dashboard Card 4: Revenue Today -->
+    <div class="dashboard-card">
+      <h2>Revenue Today</h2>
+      <p id="revenue">$0.00</p>
+      <div class="action-buttons">
+        <button class="add-cart" onclick="addRevenue()">+ Sale</button>
+        <button class="buy-now" onclick="resetRevenue()">Reset</button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Function to increment values in dashboard cards
+    function increment(elementId) {
+      const el = document.getElementById(elementId);
+      let value = parseInt(el.textContent);
+      value++;
+      el.textContent = value;
+    }
+    function resetCount(elementId) {
+      document.getElementById(elementId).textContent = 0;
+    }
+    
+    // Function to simulate a server load percentage
+    function simulateLoad() {
+      const el = document.getElementById('serverLoad');
+      let load = Math.floor(Math.random() * 100);
+      el.textContent = load + '%';
+    }
+    
+    // Function to add revenue (simulate a sale)
+    function addRevenue() {
+      const el = document.getElementById('revenue');
+      let current = parseFloat(el.textContent.replace('$',''));
+      let sale = (Math.random() * 100).toFixed(2);
+      current += parseFloat(sale);
+      el.textContent = '$' + current.toFixed(2);
+    }
+    function resetRevenue() {
+      document.getElementById('revenue').textContent = '$0.00';
+    }
+    
+    // Neon Network Background Animation
+    const canvas = document.getElementById('networkCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    const pixelSize = 16;
+    const columns = Math.floor(canvas.width / pixelSize);
+    const drops = Array(columns).fill(0);
+    const palette = ['#00ff00', '#00e600', '#00cc00'];
+    
+    function drawNetwork() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      for (let i = 0; i < drops.length; i++) {
+        const x = i * pixelSize;
+        const y = drops[i] * pixelSize;
+        const color = palette[Math.floor(Math.random() * palette.length)];
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, pixelSize - 2, pixelSize - 2);
+        
+        if (y > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+      requestAnimationFrame(drawNetwork);
+    }
+    drawNetwork();
+    
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const newColumns = Math.floor(canvas.width / pixelSize);
+      drops.length = newColumns;
+      for (let i = 0; i < newColumns; i++) {
+        if (drops[i] === undefined) drops[i] = 0;
+      }
+    });
+  </script>
+  
+  <!-- Canvas for Neon Network Background -->
+  <canvas id="networkCanvas"></canvas>
+  
+</body>
+</html>
