@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cheer Up Michael!</title>
+  <!-- Import a fun, bold font -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Global reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+    /* Neon blue ocean background with animated gradient */
+    body {
+      font-family: 'Oswald', sans-serif;
+      background: linear-gradient(135deg, #0b3d91, #1e90ff);
+      background-size: 200% 200%;
+      animation: bgAnimation 10s ease infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    @keyframes bgAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    /* Centered card with an ocean vibe */
+    .card {
+      background: rgba(255,255,255,0.95);
+      border: 3px solid #1e90ff;
+      border-radius: 15px;
+      padding: 30px;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 4px 20px rgba(30,144,255,0.5);
+      z-index: 1;
+    }
+    .card h1 {
+      font-size: 2em;
+      color: #0b3d91;
+      margin-bottom: 10px;
+    }
+    .card p {
+      font-size: 1.2em;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .card input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #1e90ff;
+      border-radius: 10px;
+      font-size: 1em;
+      margin-bottom: 20px;
+      outline: none;
+    }
+    .card input[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      background: #1e90ff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1em;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .card input[type="submit"]:hover {
+      background: #0b3d91;
+    }
+    /* Full-screen overlay that appears after submission */
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.95);
+      display: none;
+      z-index: 10;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #overlay .message {
+      font-size: 3em;
+      color: #1e90ff;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+      opacity: 0;
+      animation: fadeIn 1s forwards;
+      animation-delay: 0.5s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Entry Card -->
+  <div class="card" id="entry-card">
+    <h1>Ocean Vibes for Michael</h1>
+    <p>Enter a message to ride the waves of positivity!</p>
+    <form id="entryForm">
+      <input type="text" placeholder="Type your message..." required>
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+  <!-- Overlay for "Cheer up Michael!" -->
+  <div id="overlay">
+    <div class="message">Cheer up Michael!</div>
+  </div>
+  <script>
+    // On form submission, hide the card and display the overlay.
+    document.getElementById('entryForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      document.getElementById('entry-card').style.display = 'none';
+      setTimeout(function() {
+        document.getElementById('overlay').style.display = 'flex';
+      }, 300);
+    });
+  </script>
+</body>
+</html>
