@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Faster Site Speed</title>
+  <!-- Import a modern, bold font -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      font-family: 'Oswald', sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+    /* Lightning Overlay */
+    .lightning {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: radial-gradient(circle, rgba(255,255,0,0.6) 0%, transparent 70%);
+      opacity: 0;
+      animation: lightningFlash 6s infinite;
+      z-index: 0;
+    }
+    @keyframes lightningFlash {
+      0%, 90%, 100% { opacity: 0; }
+      92% { opacity: 1; }
+      93% { opacity: 0; }
+      95% { opacity: 1; }
+      96% { opacity: 0; }
+    }
+    /* Centered Glassmorphic Card */
+    .card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 15px;
+      padding: 30px 20px;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      z-index: 1;
+      box-shadow: 0 0 20px #00ffff;
+      color: #fff;
+    }
+    .card h1 {
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .card form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .card input[type="password"] {
+      padding: 12px;
+      font-size: 1em;
+      border: 2px solid rgba(0, 255, 255, 0.5);
+      border-radius: 8px;
+      background: transparent;
+      color: #fff;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    .card input[type="password"]:focus {
+      border-color: #00ffff;
+    }
+    .card input[type="submit"] {
+      padding: 12px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      background: #00ffff;
+      color: #000;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: background 0.3s ease;
+    }
+    .card input[type="submit"]:hover {
+      background: #00c6e0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Lightning animation overlay -->
+  <div class="lightning"></div>
+  
+  <!-- Glassmorphic Card -->
+  <div class="card">
+    <h1>Enter Password for Faster Site Speed ⚡️</h1>
+    <form id="speedForm">
+      <input type="password" placeholder="Enter password" required>
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+  
+  <script>
+    // (Optional) Add form submission behavior here.
+    document.getElementById('speedForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      // For example, you might trigger an animation or send data here.
+      alert("Password submitted! Enjoy your speedy site!");
+    });
+  </script>
+</body>
+</html>
