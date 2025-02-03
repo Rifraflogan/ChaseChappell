@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Holographic Login</title>
+  <!-- Import a modern bold font -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      font-family: 'Oswald', sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+    /* Holographic Animated Background */
+    body {
+      background: linear-gradient(45deg, #1a2a6c, #b21f1f, #fdbb2d);
+      background-size: 400% 400%;
+      animation: gradientAnimation 15s ease infinite;
+    }
+    @keyframes gradientAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    /* Holographic Shimmer Overlay */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      pointer-events: none;
+      animation: shimmer 3s infinite;
+    }
+    @keyframes shimmer {
+      0% { opacity: 0.05; transform: translateX(-100%); }
+      50% { opacity: 0.15; transform: translateX(100%); }
+      100% { opacity: 0.05; transform: translateX(-100%); }
+    }
+    /* Centered Glassmorphic Login Card */
+    .login-card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 400px;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      text-align: center;
+      color: #fff;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .login-card h2 {
+      font-size: 2em;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .login-card input[type="text"],
+    .login-card input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-radius: 8px;
+      background: transparent;
+      color: #fff;
+      font-size: 1em;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    .login-card input[type="text"]:focus,
+    .login-card input[type="password"]:focus {
+      border-color: #00ffff;
+    }
+    .login-card input[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(45deg, #00ffff, #00e6e6);
+      color: #000;
+      font-size: 1em;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+    .login-card input[type="submit"]:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #00e6e6, #00cccc);
+    }
+    /* Holographic Layers on the Card */
+    .login-card::before,
+    .login-card::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border-radius: inherit;
+      z-index: -1;
+      animation: holoShift 5s infinite;
+    }
+    .login-card::before {
+      background: linear-gradient(45deg, rgba(0,255,255,0.2), transparent);
+      opacity: 0.6;
+    }
+    .login-card::after {
+      background: linear-gradient(135deg, rgba(255,0,255,0.2), transparent);
+      opacity: 0.4;
+      animation-direction: reverse;
+    }
+    @keyframes holoShift {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(10px, -10px) scale(1.05); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .login-card h2 { font-size: 1.8em; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Holographic Animated Background is applied to the body via CSS -->
+  
+  <!-- Glassmorphic Login Card -->
+  <div class="login-card">
+    <h2>Holographic Login</h2>
+    <form id="loginForm">
+      <input type="text" placeholder="Username" required>
+      <input type="password" placeholder="Password" required>
+      <input type="submit" value="Login">
+    </form>
+  </div>
+  
+  <script>
+    // Optional: Add JavaScript for form submission behavior
+    document.getElementById('loginForm').addEventListener('submit', function
