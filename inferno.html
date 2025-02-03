@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neon Inferno Login</title>
+  <!-- Import a bold, modern font -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      font-family: 'Oswald', sans-serif;
+      color: #ff0000; /* Primary neon red */
+      overflow: hidden;
+      position: relative;
+    }
+    /* Full-Screen Neon Network Background Canvas */
+    #networkCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      z-index: 0;
+    }
+    /* Header */
+    header {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      box-shadow: 0 0 10px rgba(255,0,0,0.5);
+    }
+    header h1 {
+      font-size: 2.8em;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #ff0000;
+    }
+    /* Glassmorphic Login Card */
+    .login-card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 400px;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255,0,0,0.3);
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255,0,0,0.5);
+      text-align: center;
+      z-index: 2;
+    }
+    .login-card h2 {
+      font-size: 2em;
+      margin-bottom: 20px;
+      color: #ff0000;
+      text-transform: uppercase;
+    }
+    .login-card input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 1em;
+      border: 2px solid rgba(255,0,0,0.5);
+      border-radius: 8px;
+      background: transparent;
+      color: #fff;
+      margin-bottom: 20px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    .login-card input[type="password"]:focus {
+      border-color: #ff4500;
+    }
+    .login-card input[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(45deg, #ff0000, #ff4500);
+      color: #000;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: transform 0.3s ease, background 0.3s ease;
+      /* Base pulsating neon outline using dual-tone glow */
+      border: 2px solid #ff0000;
+      animation: pulsateOutline 2s infinite;
+    }
+    .login-card input[type="submit"]:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #ff4500, #ff6347);
+    }
+    @keyframes pulsateOutline {
+      0%, 100% {
+        box-shadow: 0 0 5px #ff0000, 0 0 15px #ff00ff;
+      }
+      50% {
+        box-shadow: 0 0 15px #ff0000, 0 0 25px #ff00ff;
+      }
+    }
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2em;
+      }
+      .login-card h2 {
+        font-size: 1.8em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Neon Network Background Canvas -->
+  <canvas id="networkCanvas"></canvas>
+  
+  <!-- Header -->
+  <header>
+    <h1>Neon Inferno</h1>
+  </header>
+  
+  <!-- Login Card -->
+  <div class="login-card">
+    <h2>Enter Password for Inferno Access</h2>
+    <form id="loginForm">
+      <input type="password" placeholder="Enter password" required>
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+  
+  <script>
+    // Set up the Neon Network Background Animation
+    const canvas = document.getElementById('networkCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    const nodeCount = 100;
+    const nodes = [];
+    const maxDistance = 150;
+    
+    class Node {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 1.5;
+        this.vy = (Math.random() - 0.5) * 1.5;
+        this.radius = Math.random() * 2 + 1;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = "#ff0000";
+        ctx.fill();
+      }
+    }
+    
+    for (let i = 0; i < nodeCount; i++) {
+      nodes.push(new Node());
+    }
+    
+    function drawNetwork() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      for (let i = 0; i < nodeCount; i++) {
+        for (let j = i + 1; j < nodeCount; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < maxDistance) {
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.strokeStyle = `rgba(255,0,0,${1 - dist / maxDistance})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
+      
+      nodes.forEach(node => {
+        node.update();
+        node.draw();
+      });
+      
+      requestAnimationFrame(drawNetwork);
+    }
+    drawNetwork();
+    
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+    
+    // Form Submission: Demo behavior
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert("Access Granted! Welcome to the Neon Inferno.");
+    });
+  </script>
+</body>
+</html>
