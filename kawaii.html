@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kawaii Nightscape</title>
+  <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      font-family: 'Oswald', sans-serif;
+    }
+    /* Starfield Canvas */
+    #starCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      z-index: 0;
+    }
+    /* Glassmorphic Card */
+    .card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 500px;
+      padding: 30px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255,105,180,0.5); /* Hot pink border */
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255,105,180,0.5);
+      text-align: center;
+      z-index: 1;
+      color: #ff69b4; /* Hot pink text */
+    }
+    .card h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+    .card p {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    /* Cute Icon with Bounce Animation */
+    .card .cute-icon {
+      font-size: 3em;
+      margin-bottom: 10px;
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-20px); }
+      60% { transform: translateY(-10px); }
+    }
+    /* Responsive Adjustments */
+    @media (max-width: 600px) {
+      .card h1 { font-size: 2em; }
+      .card p { font-size: 1em; }
+    }
+  </style>
+  <!-- Optionally import a fun font for extra cuteness -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Starfield Background Canvas -->
+  <canvas id="starCanvas"></canvas>
+  
+  <!-- Glassmorphic Card -->
+  <div class="card">
+    <div class="cute-icon">💖</div>
+    <h1>Kawaii Nightscape</h1>
+    <p>Welcome, my sweet love! Enter your email to receive a dose of cuteness and cosmic vibes.</p>
+    <form id="emailForm">
+      <input type="email" placeholder="Enter your email" required style="width:100%; padding:12px; border:2px solid rgba(255,105,180,0.5); border-radius:8px; background:transparent; color:#fff; font-size:1em; margin-bottom:15px;">
+      <input type="submit" value="Submit" style="width:100%; padding:12px; border:none; border-radius:8px; background:#ff69b4; color:#000; font-size:1em; cursor:pointer; text-transform:uppercase;">
+    </form>
+  </div>
+  
+  <script>
+    // Starfield Animation Code
+    const canvas = document.getElementById('starCanvas');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+    
+    const stars = [];
+    const starCount = 150;
+    for (let i = 0; i < starCount; i++) {
+      stars.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 1.5,
+        opacity: Math.random()
+      });
+    }
+    
+    function drawStars() {
+      ctx.clearRect(0, 0, width, height);
+      for (let star of stars) {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        // Use a pastel pink color with variable opacity
+        ctx.fillStyle = `rgba(255,182,193,${star.opacity})`;
+        ctx.fill();
+      }
+      updateStars();
+      requestAnimationFrame(drawStars);
+    }
+    
+    function updateStars() {
+      for (let star of stars) {
+        // Randomly adjust the opacity for a twinkling effect.
+        star.opacity += (Math.random() - 0.5) * 0.05;
+        if (star.opacity < 0) star.opacity = 0;
+        if (star.opacity > 1) star.opacity = 1;
+      }
+    }
+    
+    drawStars();
+    
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+    
+    // Optional: Form Submission Behavior (for demo purposes)
+    document.getElementById('emailForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert("Thanks for joining our cosmic cuddle club!");
+    });
+  </script>
+</body>
+</html>
