@@ -2,118 +2,125 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Futuristic Glowing DNA Helix</title>
+  <title>Insane Futuristic Glowing DNA Helix Animation</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       overflow: hidden;
-      background-color: #000;
+      background: #000;
     }
     canvas {
       display: block;
+      background: #000;
     }
   </style>
 </head>
 <body>
   <canvas id="canvas"></canvas>
   <script>
-    // Get the canvas and context
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    let width = canvas.width = window.innerWidth;
-    let height = canvas.height = window.innerHeight;
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
 
-    // Adjust canvas size on window resize
-    window.addEventListener('resize', () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
+    // Set canvas dimensions
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
+    window.addEventListener("resize", () => {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
     });
 
-    // DNA helix configuration and state
-    const helix = {
-      // Starting center point that will bounce around the screen
-      x: width / 2,
-      y: height / 2,
-      // Velocity for bouncing motion
-      vx: 3,
-      vy: 2,
-      // Base amplitude for the twist (will morph over time)
-      baseAmplitude: 120,
-      // Total vertical length over which the helix is drawn
-      length: height * 1.5,
-      // Vertical spacing between base pairs
-      spacing: 25,
-      // Speed at which the helix twists
-      twistSpeed: 0.07,
-      // Speed factor for morphing the amplitude
-      morphSpeed: 0.005,
-      // Current phase for twisting animation
-      phase: 0
-    };
+    // Use additive blending for extra glow
+    ctx.globalCompositeOperation = "lighter";
+
+    // Create several helix objects for an insane, layered effect
+    const helixes = [];
+    const numHelixes = 5;
+    for (let i = 0; i < numHelixes; i++) {
+      helixes.push({
+        // Random starting position
+        x: Math.random() * w,
+        y: Math.random() * h,
+        // Random velocity to bounce around the screen
+        vx: (Math.random() - 0.5) * 8,
+        vy: (Math.random() - 0.5) * 8,
+        // Base amplitude for the twist
+        baseAmplitude: 60 + Math.random() * 80,
+        // Speed at which the helix twists
+        twistSpeed: 0.02 + Math.random() * 0.06,
+        // Initial phase offset
+        phase: Math.random() * Math.PI * 2,
+        // Speed factor for morphing amplitude
+        morphSpeed: 0.005 + Math.random() * 0.01,
+        // Total vertical length of the helix (relative to its center)
+        length: h * 1.5,
+        // Vertical spacing between segments (base pairs)
+        spacing: 8 + Math.random() * 5,
+      });
+    }
 
     let globalTime = 0;
 
     function animate() {
-      // Clear the canvas
-      ctx.clearRect(0, 0, width, height);
+      // Create a trailing, fading effect by drawing a semi-transparent black overlay
+      ctx.fillStyle = "rgba(0, 0, 0, 0.12)";
+      ctx.fillRect(0, 0, w, h);
 
-      // Update helix center position and bounce off walls
-      helix.x += helix.vx;
-      helix.y += helix.vy;
-      if (helix.x < 150 || helix.x > width - 150) helix.vx *= -1;
-      if (helix.y < 150 || helix.y > height - 150) helix.vy *= -1;
+      // Loop through each helix and update/draw it
+      helixes.forEach(helix => {
+        // Update helix center position
+        helix.x += helix.vx;
+        helix.y += helix.vy;
+        // Bounce off the walls (with a margin)
+        if (helix.x < 100 || helix.x > w - 100) helix.vx *= -1;
+        if (helix.y < 100 || helix.y > h - 100) helix.vy *= -1;
 
-      // Update the twisting phase
-      helix.phase += helix.twistSpeed;
+        // Update the twisting phase
+        helix.phase += helix.twistSpeed;
+        // Dynamically modulate amplitude for a morphing effect
+        let currentAmplitude = helix.baseAmplitude + Math.sin(globalTime * helix.morphSpeed) * helix.baseAmplitude * 0.5;
 
-      // Compute a morphing amplitude using a sine function for a dynamic effect
-      const currentAmplitude = helix.baseAmplitude + Math.sin(globalTime * helix.morphSpeed) * helix.baseAmplitude * 0.5;
+        // Set a heavy glow effect
+        ctx.shadowBlur = 30;
+        ctx.shadowColor = "#0f0";
 
-      // Set glow effect parameters
-      ctx.shadowBlur = 20;
-      ctx.shadowColor = '#0f0';
+        // Draw the DNA helix by looping over vertical offsets
+        for (let offset = -helix.length / 2; offset < helix.length / 2; offset += helix.spacing) {
+          // Compute the angle for twisting, adding a bit of vertical modulation
+          let angle = (offset / 50) + helix.phase;
+          let xOffset = currentAmplitude * Math.sin(angle);
+          let yPos = helix.y + offset;
 
-      // Draw the helix segments (both strands with connecting base pairs)
-      for (let i = -Math.ceil(helix.length / 2); i < Math.ceil(helix.length / 2); i += helix.spacing) {
-        // yOffset relative to the helix center
-        const yOffset = i;
-        // Calculate the twisting angle for this segment
-        const angle = (yOffset / 50) + helix.phase;
-        // Horizontal offset for the left/right points on the helix
-        const xOffset = currentAmplitude * Math.sin(angle);
-        
-        // Calculate the positions for left and right strand points
-        const leftX = helix.x + xOffset;
-        const rightX = helix.x - xOffset;
-        const posY = helix.y + yOffset;
-        
-        // Draw the connecting "rung" (base pair)
-        ctx.beginPath();
-        ctx.moveTo(leftX, posY);
-        ctx.lineTo(rightX, posY);
-        ctx.strokeStyle = 'rgba(0, 255, 0, 0.8)';
-        ctx.lineWidth = 2;
-        ctx.stroke();
+          // Left and right strand positions
+          let leftX = helix.x + xOffset;
+          let rightX = helix.x - xOffset;
 
-        // Calculate circle size modulation to simulate depth
-        const circleScale = 1 + 0.5 * Math.cos(angle);
-        const circleRadius = 4 * circleScale;
+          // Draw the connecting base pair line
+          ctx.beginPath();
+          ctx.moveTo(leftX, yPos);
+          ctx.lineTo(rightX, yPos);
+          ctx.strokeStyle = "rgba(0,255,0,0.8)";
+          ctx.lineWidth = 2;
+          ctx.stroke();
 
-        // Draw left glowing circle
-        ctx.beginPath();
-        ctx.arc(leftX, posY, circleRadius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(0, 255, 0, 0.9)';
-        ctx.fill();
+          // Modulate circle size to simulate a 3D effect
+          let scale = 0.7 + 0.3 * Math.cos(angle);
+          let circleRadius = 4 * scale;
 
-        // Draw right glowing circle
-        ctx.beginPath();
-        ctx.arc(rightX, posY, circleRadius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(0, 255, 0, 0.9)';
-        ctx.fill();
-      }
+          // Draw glowing spheres on the left strand
+          ctx.beginPath();
+          ctx.arc(leftX, yPos, circleRadius, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(0,255,0,0.9)";
+          ctx.fill();
 
-      // Increase the global time for morphing
+          // Draw glowing spheres on the right strand
+          ctx.beginPath();
+          ctx.arc(rightX, yPos, circleRadius, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(0,255,0,0.9)";
+          ctx.fill();
+        }
+      });
+
       globalTime++;
       requestAnimationFrame(animate);
     }
