@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Futuristic DNA Helix Background</title>
+  <style>
+    /* Remove default spacing and hide scrollbars */
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #000;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="dnaCanvas"></canvas>
+  <script>
+    const canvas = document.getElementById("dnaCanvas");
+    const ctx = canvas.getContext("2d");
+    let width, height;
+    
+    // Set canvas dimensions to fill the window
+    function resizeCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    let time = 0; // Global time variable for animation
+
+    function animate() {
+      // Clear the canvas each frame
+      ctx.clearRect(0, 0, width, height);
+
+      // Parameters for the DNA helix
+      const centerX = width / 2;
+      const amplitude = width * 0.15; // horizontal spread of the strands
+      const spacing = 25; // vertical distance between base pairs
+
+      // Loop over enough points to fill (and slightly exceed) the viewport
+      for (let i = -1; i <= Math.ceil(height / spacing) + 1; i++) {
+        // Create a scrolling effect by adjusting y with time
+        let y = i * spacing + (time % spacing);
+        // Angle determines the twist of the helix; tweaking multipliers changes the speed and tightness
+        let angle = (y * 0.05) + (time * 0.02);
+        // Sine gives the horizontal offset for the twist
+        let xOffset = amplitude * Math.sin(angle);
+
+        // Calculate positions for the left and right strands
+        let leftX = centerX + xOffset;
+        let rightX = centerX - xOffset;
+
+        // Draw the connecting line (mimics a base pair)
+        ctx.beginPath();
+        ctx.moveTo(leftX, y);
+        ctx.lineTo(rightX, y);
+        ctx.strokeStyle = "rgba(0, 255, 0, 0.6)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Create a pseudo-3D effect: use cosine to modulate the size of the circles
+        let scale = 0.5 + 0.5 * ((Math.cos(angle) + 1) / 2); // scales between ~0.5 and 1
+        let circleRadius = 4 * scale;
+
+        // Draw left strand circle
+        ctx.beginPath();
+        ctx.arc(leftX, y, circleRadius, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(0, 255, 0, 0.8)";
+        ctx.fill();
+
+        // Draw right strand circle
+        ctx.beginPath();
+        ctx.arc(rightX, y, circleRadius, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(0, 255, 0, 0.8)";
+        ctx.fill();
+      }
+
+      time += 2; // Increment time to animate the twist
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
