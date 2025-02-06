@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Checkmark Animation</title>
+    <!-- Using Montserrat Bold from Google Fonts as a stand-in for Monsteratt Bold -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Global styles */
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: #f0f0f0;
+      }
+      /* The blue card */
+      .card {
+        background-color: #3544ee;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 320px;
+        color: #fff;
+        font-family: 'Montserrat', sans-serif;
+      }
+      /* Each list item */
+      .item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        opacity: 0;
+        animation: fadeIn 0.5s forwards;
+      }
+      /* Stagger the fade-in for each item */
+      .item:nth-child(1) {
+        animation-delay: 0.3s;
+      }
+      .item:nth-child(2) {
+        animation-delay: 0.8s;
+      }
+      .item:nth-child(3) {
+        animation-delay: 1.3s;
+      }
+      /* The checkmark container */
+      .checkmark {
+        width: 24px;
+        height: 24px;
+        margin-right: 12px;
+      }
+      .checkmark svg {
+        width: 100%;
+        height: 100%;
+      }
+      /* The checkmark path: we set up a stroke-dash animation */
+      .checkmark path {
+        stroke: #fff;
+        stroke-width: 3;
+        fill: none;
+        /* Set up the dash pattern – adjust the value (42) if your path length changes */
+        stroke-dasharray: 42;
+        stroke-dashoffset: 42;
+        animation: draw 0.5s ease forwards;
+      }
+      /* Stagger the checkmark drawing to match each list item */
+      .item:nth-child(1) .checkmark path {
+        animation-delay: 0.3s;
+      }
+      .item:nth-child(2) .checkmark path {
+        animation-delay: 0.8s;
+      }
+      .item:nth-child(3) .checkmark path {
+        animation-delay: 1.3s;
+      }
+      /* Animation for drawing the checkmark */
+      @keyframes draw {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+      /* Fade-in animation for the entire item */
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+        }
+      }
+      /* Item text styling */
+      .item-text {
+        font-size: 16px;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="item">
+        <div class="checkmark">
+          <svg viewBox="0 0 48 48">
+            <!-- A simple checkmark path -->
+            <path d="M10 24 L20 34 L38 14" />
+          </svg>
+        </div>
+        <div class="item-text">Scalable growth.</div>
+      </div>
+      <div class="item">
+        <div class="checkmark">
+          <svg viewBox="0 0 48 48">
+            <path d="M10 24 L20 34 L38 14" />
+          </svg>
+        </div>
+        <div class="item-text">Consistent results.</div>
+      </div>
+      <div class="item">
+        <div class="checkmark">
+          <svg viewBox="0 0 48 48">
+            <path d="M10 24 L20 34 L38 14" />
+          </svg>
+        </div>
+        <div class="item-text">
+          And most importantly… profitability.
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
