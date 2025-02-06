@@ -2,7 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Checkmark Animation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modern Checkmark Animation Card</title>
     <!-- Using Montserrat Bold from Google Fonts as a stand-in for Monsteratt Bold -->
     <link
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap"
@@ -19,15 +20,17 @@
         min-height: 100vh;
         background: #f0f0f0;
       }
-      /* The blue card */
+      /* Modern card styling with a gradient background and glowing white border */
       .card {
-        background-color: #3544ee;
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background: linear-gradient(135deg, #3544ee, #5868f7);
+        padding: 40px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.2),
+          0 4px 12px rgba(0, 0, 0, 0.1);
         width: 320px;
         color: #fff;
-        font-family: 'Montserrat', sans-serif;
+        font-family: "Montserrat", sans-serif;
       }
       /* Each list item */
       .item {
@@ -62,7 +65,7 @@
         stroke: #fff;
         stroke-width: 3;
         fill: none;
-        /* Set up the dash pattern – adjust the value (42) if your path length changes */
+        /* The dash pattern – adjust if your path length changes */
         stroke-dasharray: 42;
         stroke-dashoffset: 42;
         animation: draw 0.5s ease forwards;
